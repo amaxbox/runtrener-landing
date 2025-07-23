@@ -72,12 +72,34 @@
             color: #007aff;
             text-decoration: none;
             font-size: 14px;
-            margin-right: 8px;
             line-height: 1.47059;
         }
 
         .developer-link:hover {
             text-decoration: underline;
+        }
+
+        .header-links {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .tip-button {
+            background: #ff9500;
+            color: white;
+            text-decoration: none;
+            font-size: 13px;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-weight: 500;
+            transition: opacity 0.15s ease;
+        }
+
+        .tip-button:hover,
+        .tip-button:active {
+            color: white;
+            opacity: 0.8;
         }
 
         .hero {
@@ -261,7 +283,10 @@
     <header>
         <nav class="container">
             <div class="logo">🏃‍♂️ Твой тренер по бегу</div>
-            <a href="https://t.me/+fuPN8ZZKjSBiMzUy" class="developer-link">Написать разработчикам</a>
+            <div class="header-links">
+                <a href="https://t.me/+fuPN8ZZKjSBiMzUy" class="developer-link">Написать разработчикам</a>
+                <a href="https://spasibomir.ru/pay/25369" class="tip-button">Оставить чаевые</a>
+            </div>
         </nav>
     </header>
 
