@@ -66,13 +66,23 @@
             font-weight: 600;
             color: #1d1d1f;
             letter-spacing: -0.022em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            font-size: 42px;
         }
 
         .developer-link {
             color: #007aff;
             text-decoration: none;
-            font-size: 14px;
+            font-size: 16px;
             line-height: 1.47059;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .developer-link:hover {
@@ -81,25 +91,27 @@
 
         .header-links {
             display: flex;
-            gap: 16px;
+            gap: 24px;
             align-items: center;
         }
 
-        .tip-button {
-            background: #ff9500;
-            color: white;
+        .tip-link {
+            color: #007aff;
             text-decoration: none;
-            font-size: 13px;
-            padding: 6px 12px;
-            border-radius: 16px;
-            font-weight: 500;
-            transition: opacity 0.15s ease;
+            font-size: 16px;
+            line-height: 1.47059;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .tip-button:hover,
-        .tip-button:active {
-            color: white;
-            opacity: 0.8;
+        .tip-link:hover {
+            text-decoration: underline;
+        }
+
+        .developer-icon,
+        .tip-icon {
+            font-size: 32px;
         }
 
         .hero {
@@ -276,16 +288,55 @@
                 padding: 0 16px;
             }
 
+            .logo {
+                font-size: 24px;
+            }
+
+            .logo-icon {
+                font-size: 48px;
+            }
+
+
+            .developer-link {
+                font-size: 18px;
+            }
+
+            .developer-link-text {
+                display: none;
+            }
+
+            .tip-link {
+                font-size: 18px;
+            }
+
+            .tip-link-text {
+                display: none;
+            }
+
+            .developer-icon,
+            .tip-icon {
+                font-size: 36px;
+            }
+
         }
     </style>
 </head>
 <body>
     <header>
         <nav class="container">
-            <div class="logo">🏃‍♂️ Твой тренер по бегу</div>
+            <div class="logo">
+                <span class="logo-icon">🏃‍♂️</span>
+                <span class="logo-text">Твой тренер по бегу</span>
+            </div>
             <div class="header-links">
-                <a href="https://t.me/+fuPN8ZZKjSBiMzUy" class="developer-link">Написать разработчикам</a>
-                <a href="https://spasibomir.ru/pay/25369" class="tip-button">Оставить чаевые</a>
+                <a href="https://t.me/+fuPN8ZZKjSBiMzUy" class="developer-link">
+                    <span class="developer-link-text">Написать разработчикам</span>
+                    <span class="developer-icon">💬</span>
+                </a>
+                <a href="https://spasibomir.ru/pay/25369" class="tip-link">
+                    <span class="tip-link-text">Оставить чаевые</span>
+                    <span class="tip-icon">💰</span>
+                </a>
             </div>
         </nav>
     </header>
