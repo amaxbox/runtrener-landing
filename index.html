@@ -234,6 +234,104 @@
             text-transform: lowercase;
         }
 
+        .roadmap {
+            background: #ffffff;
+            padding: 80px 0;
+        }
+
+        .roadmap h2 {
+            text-align: center;
+            font-size: 40px;
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.003em;
+            margin-bottom: 40px;
+            color: #1d1d1f;
+        }
+
+        .roadmap-timeline {
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .roadmap-timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #d1d1d6;
+            transform: translateX(-50%);
+        }
+
+        .roadmap-item {
+            position: relative;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+        }
+
+        .roadmap-item:nth-child(odd) {
+            flex-direction: row;
+        }
+
+        .roadmap-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .roadmap-content {
+            background: #f5f5f7;
+            padding: 24px;
+            border-radius: 16px;
+            width: 45%;
+            position: relative;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .roadmap-item:nth-child(odd) .roadmap-content {
+            margin-right: auto;
+        }
+
+        .roadmap-item:nth-child(even) .roadmap-content {
+            margin-left: auto;
+        }
+
+        .roadmap-quarter {
+            color: #007aff;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .roadmap-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1d1d1f;
+        }
+
+        .roadmap-description {
+            color: #86868b;
+            line-height: 1.47059;
+            font-size: 15px;
+        }
+
+        .roadmap-dot {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 12px;
+            height: 12px;
+            background: #d1d1d6;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+        }
+
         .cta-section {
             background: #f5f5f7;
             padding: 100px 0;
@@ -318,6 +416,26 @@
                 font-size: 32px;
             }
 
+            .roadmap-timeline::before {
+                left: 30px;
+                transform: none;
+            }
+
+            .roadmap-item {
+                flex-direction: row !important;
+            }
+
+            .roadmap-content {
+                width: calc(100% - 60px);
+                margin-left: 60px !important;
+                margin-right: 0 !important;
+            }
+
+            .roadmap-dot {
+                left: 30px;
+                transform: translate(-50%, -50%);
+            }
+
         }
     </style>
 </head>
@@ -351,37 +469,73 @@
 
     <section class="features" id="features">
         <div class="container">
-            <h2>Что получите</h2>
+            <h2>Ваши возможности</h2>
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">🎯</div>
                     <h3>План тренировок под вас</h3>
-                    <p>Тренировки под ваш уровень, цели и свободное время. ИИ корректирует план по мере роста результатов.</p>
+                    <p>Тренировки под ваш уровень, цели и&nbsp;свободное время. ИИ&nbsp;корректирует план по&nbsp;мере роста результатов.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">📊</div>
                     <h3>Анализ прогресса</h3>
-                    <p>Видите динамику результатов и получаете рекомендации на основе ваших данных.</p>
+                    <p>Видите динамику результатов и&nbsp;получаете рекомендации на&nbsp;основе ваших данных.</p>
                 </div>
                 <div class="feature-card coming-soon">
                     <div class="feature-icon">📈</div>
                     <h3>Дашборд прогресса</h3>
-                    <p>Визуализация всех ваших метрик в одном месте — темп, дистанция, пульс, восстановление.</p>
+                    <p>Визуализация всех ваших метрик в&nbsp;одном месте&nbsp;— темп, дистанция, пульс, восстановление.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🏆</div>
                     <h3>Достижение целей</h3>
-                    <p>Первые 5 км или личный рекорд на марафоне — поможем достичь цели быстрее и безопаснее.</p>
+                    <p>Первые 5&nbsp;км или личный рекорд на&nbsp;марафоне&nbsp;— поможем достичь цели быстрее и&nbsp;безопаснее.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">💪</div>
                     <h3>Без травм</h3>
-                    <p>Контролируем нагрузку и планируем восстановление, чтобы вы не получили травму.</p>
+                    <p>Контролируем нагрузку и&nbsp;планируем восстановление, чтобы вы&nbsp;не&nbsp;получили травму.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🌟</div>
                     <h3>Всегда на связи</h3>
-                    <p>Тренер отвечает на вопросы, мотивирует и корректирует план в любое время.</p>
+                    <p>Тренер отвечает на&nbsp;вопросы, мотивирует и&nbsp;корректирует план в&nbsp;любое время.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="roadmap">
+        <div class="container">
+            <h2>Роадмап развития</h2>
+            <div class="roadmap-timeline">
+                <div class="roadmap-item">
+                    <div class="roadmap-content">
+                        <div class="roadmap-title">📸 Распознавание тренировок по фото</div>
+                        <div class="roadmap-description">Загружайте фото экрана с&nbsp;результатами тренировки, и&nbsp;ИИ автоматически распознает и&nbsp;добавит данные в&nbsp;ваш план.</div>
+                    </div>
+                    <div class="roadmap-dot"></div>
+                </div>
+                <div class="roadmap-item">
+                    <div class="roadmap-content">
+                        <div class="roadmap-title">⌚️ Интеграции с гаджетами</div>
+                        <div class="roadmap-description">Подключение к&nbsp;популярным спортивным часам и&nbsp;фитнес-трекерам для автоматической синхронизации данных.</div>
+                    </div>
+                    <div class="roadmap-dot"></div>
+                </div>
+                <div class="roadmap-item">
+                    <div class="roadmap-content">
+                        <div class="roadmap-title">🔥 Подсчёт калорий по фото</div>
+                        <div class="roadmap-description">Фотографируйте еду, и&nbsp;тренер автоматически подсчитает калории и&nbsp;даст рекомендации по&nbsp;питанию.</div>
+                    </div>
+                    <div class="roadmap-dot"></div>
+                </div>
+                <div class="roadmap-item">
+                    <div class="roadmap-content">
+                        <div class="roadmap-title">✨ Ответы на голосовые и кружки</div>
+                        <div class="roadmap-description">Отправляйте голосовые сообщения и&nbsp;видеокружки, получайте персональные советы в&nbsp;том&nbsp;же формате.</div>
+                    </div>
+                    <div class="roadmap-dot"></div>
                 </div>
             </div>
         </div>
@@ -390,14 +544,14 @@
     <section class="cta-section">
         <div class="container">
             <h2>Начните тренироваться умнее</h2>
-            <p>Получите первую тренировку и план развития бесплатно</p>
+            <p>Получите первую тренировку и&nbsp;план развития бесплатно</p>
             <a href="https://t.me/runtrener_bot" class="cta-button">Начать бесплатно</a>
         </div>
     </section>
 
     <footer>
         <div class="container">
-            <p>&copy; 2025 Твой тренер по бегу. Все права защищены.</p>
+            <p>&copy;&nbsp;2025 Твой тренер по&nbsp;бегу. Все права защищены.</p>
         </div>
     </footer>
 </body>
