@@ -572,41 +572,32 @@
             try {
                 console.log('Запрос данных из Grafana через прокси...');
                 
-                // Проверяем, работаем ли мы на HTTPS (GitHub Pages)
-                const isHTTPS = window.location.protocol === 'https:';
+                // Используем HTTPS API для всех окружений
+                const apiUrl = 'https://89.110.65.155/api/stats';
                 
-                if (isHTTPS) {
-                    console.log('HTTPS окружение: используем fallback значения из-за Mixed Content Policy');
-                    console.log('Для реальных данных нужен HTTPS API endpoint');
-                    
-                    // Для HTTPS используем статичные данные с небольшой вариацией
-                    const baseAthletes = 83; // Последнее известное значение
-                    const variation = Math.floor(Math.random() * 6) - 3; // +/- 3
-                    const result = Math.max(70, baseAthletes + variation); // Минимум 70
-                    
-                    console.log(`Fallback значение: ${result} атлетов`);
-                    return {
-                        athletes: result
-                    };
-                }
+                console.log(`Запрос к: ${apiUrl}`);
                 
-                // Для HTTP (локальная разработка) делаем реальный запрос
-                const response = await fetch('http://89.110.65.155:8083/api/stats');
+                const response = await fetch(apiUrl);
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 
                 const data = await response.json();
-                console.log('Данные получены из API:', data);
+                console.log('Реальные данные получены из Grafana:', data);
                 
                 return {
                     athletes: data.athletes || 83
                 };
                 
             } catch (error) {
-                console.error('Ошибка получения данных:', error);
-                // Fallback к статичным данным
+                console.error('Ошибка получения данных из HTTPS API:', error);
+                console.log('Возможные причины:');
+                console.log('1. SSL сертификат не принят в браузере');
+                console.log('2. API сервер недоступен');
+                console.log('3. CORS проблема');
+                
+                // Fallback к статичным данным только при ошибке
                 return {
                     athletes: 83
                 };
