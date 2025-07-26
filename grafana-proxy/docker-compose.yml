@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  grafana-proxy:
+    build: .
+    ports:
+      - "8083:8082"
+    environment:
+      - PORT=8082
+      - FLASK_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

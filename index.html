@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Твой тренер по бегу - Ваш ИИ-тренер по бегу</title>
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript" >
+       (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+       m[i].l=1*new Date();
+       for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+       k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+       (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+       ym(103377759, "init", {
+            clickmap:true,
+            trackLinks:true,
+            accurateTrackBounce:true,
+            webvisor:true
+       });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/103377759" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.47059;
+            color: #1d1d1f;
+            background: #ffffff;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 22px;
+        }
+
+        header {
+            background: rgba(251, 251, 253, 0.8);
+            backdrop-filter: saturate(180%) blur(20px);
+            padding: 12px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 21px;
+            font-weight: 600;
+            color: #1d1d1f;
+            letter-spacing: -0.022em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            font-size: 42px;
+        }
+
+        .developer-link {
+            color: #007aff;
+            text-decoration: none;
+            font-size: 16px;
+            line-height: 1.47059;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .developer-link:hover {
+            text-decoration: underline;
+        }
+
+        .header-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .tip-link {
+            color: #007aff;
+            text-decoration: none;
+            font-size: 16px;
+            line-height: 1.47059;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tip-link:hover {
+            text-decoration: underline;
+        }
+
+        .developer-icon,
+        .tip-icon {
+            font-size: 32px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 120px 0 16px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            width: 100%;
+        }
+
+        .hero h1 {
+            font-size: 56px;
+            font-weight: 700;
+            line-height: 1.07143;
+            letter-spacing: -0.005em;
+            margin-bottom: 16px;
+            color: #1d1d1f;
+        }
+
+        .hero p {
+            font-size: 21px;
+            line-height: 1.381;
+            font-weight: 400;
+            margin-bottom: 40px;
+            color: #86868b;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 40px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: #007aff;
+            color: white;
+            padding: 12px 32px;
+            text-decoration: none;
+            border-radius: 980px;
+            font-size: 17px;
+            font-weight: 400;
+            transition: all 0.15s ease;
+            min-width: 110px;
+            text-align: center;
+        }
+
+        .cta-button:hover {
+            background: #0056cc;
+            transform: translateY(-1px);
+        }
+
+        .hero .stats-info {
+            font-size: 14px;
+            color: #1d1d1f !important;
+            margin-top: 72px;
+            margin-bottom: 0;
+            font-weight: 400;
+            line-height: 1.4;
+            max-width: none;
+        }
+
+        .features {
+            background: #ffffff;
+            padding: 100px 0;
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 40px;
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.003em;
+            margin-bottom: 60px;
+            color: #1d1d1f;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 32px;
+        }
+
+        .feature-card {
+            background: #f5f5f7;
+            padding: 40px 32px;
+            border-radius: 18px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 24px;
+            display: block;
+        }
+
+        .feature-card h3 {
+            font-size: 24px;
+            font-weight: 600;
+            line-height: 1.16667;
+            margin-bottom: 16px;
+            color: #1d1d1f;
+        }
+
+        .feature-card p {
+            color: #86868b;
+            line-height: 1.47059;
+            font-size: 17px;
+            font-weight: 400;
+        }
+
+        .coming-soon {
+            position: relative;
+        }
+
+        .coming-soon::after {
+            content: 'скоро';
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #007aff;
+            color: white;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 4px 8px;
+            border-radius: 12px;
+            text-transform: lowercase;
+        }
+
+        .roadmap {
+            background: #ffffff;
+            padding: 80px 0;
+        }
+
+        .roadmap h2 {
+            text-align: center;
+            font-size: 40px;
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.003em;
+            margin-bottom: 40px;
+            color: #1d1d1f;
+        }
+
+        .roadmap-timeline {
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .roadmap-timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #d1d1d6;
+            transform: translateX(-50%);
+        }
+
+        .roadmap-item {
+            position: relative;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+        }
+
+        .roadmap-item:nth-child(odd) {
+            flex-direction: row;
+        }
+
+        .roadmap-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .roadmap-content {
+            background: #f5f5f7;
+            padding: 24px;
+            border-radius: 16px;
+            width: 45%;
+            position: relative;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .roadmap-item:nth-child(odd) .roadmap-content {
+            margin-right: auto;
+        }
+
+        .roadmap-item:nth-child(even) .roadmap-content {
+            margin-left: auto;
+        }
+
+        .roadmap-quarter {
+            color: #007aff;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .roadmap-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1d1d1f;
+        }
+
+        .roadmap-description {
+            color: #86868b;
+            line-height: 1.47059;
+            font-size: 15px;
+        }
+
+        .roadmap-dot {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 12px;
+            height: 12px;
+            background: #d1d1d6;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+        }
+
+        .cta-section {
+            background: #f5f5f7;
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 40px;
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.003em;
+            margin-bottom: 16px;
+            color: #1d1d1f;
+        }
+
+        .cta-section p {
+            font-size: 21px;
+            line-height: 1.381;
+            font-weight: 400;
+            margin-bottom: 40px;
+            color: #86868b;
+        }
+
+        footer {
+            background: #f5f5f7;
+            color: #86868b;
+            text-align: center;
+            padding: 40px 0;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        footer p {
+            font-size: 12px;
+            line-height: 1.33337;
+            font-weight: 400;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 40px;
+            }
+            
+            .hero p {
+                font-size: 19px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 0 16px;
+            }
+
+            .logo {
+                font-size: 20px;
+            }
+
+            .logo-icon {
+                font-size: 40px;
+            }
+
+
+            .developer-link {
+                font-size: 16px;
+            }
+
+            .developer-link-text {
+                display: none;
+            }
+
+            .tip-link {
+                font-size: 16px;
+            }
+
+            .tip-link-text {
+                display: none;
+            }
+
+            .developer-icon,
+            .tip-icon {
+                font-size: 32px;
+            }
+
+            .roadmap-timeline::before {
+                left: 30px;
+                transform: none;
+            }
+
+            .roadmap-item {
+                flex-direction: row !important;
+            }
+
+            .roadmap-content {
+                width: calc(100% - 60px);
+                margin-left: 60px !important;
+                margin-right: 0 !important;
+            }
+
+            .roadmap-dot {
+                left: 30px;
+                transform: translate(-50%, -50%);
+            }
+
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">
+                <span class="logo-icon">🏃‍♂️</span>
+                <span class="logo-text">Твой тренер по бегу</span>
+            </div>
+            <div class="header-links">
+                <a href="https://t.me/+fuPN8ZZKjSBiMzUy" class="developer-link">
+                    <span class="developer-link-text">Написать разработчикам</span>
+                    <span class="developer-icon">💬</span>
+                </a>
+                <a href="https://spasibomir.ru/pay/25369" class="tip-link">
+                    <span class="tip-link-text">Оставить чаевые</span>
+                    <span class="tip-icon">💰</span>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Тренер, который всегда рядом</h1>
+            <p>Индивидуальные планы, постоянная поддержка и гарантированный результат в удобном Telegram-боте</p>
+            <a href="https://t.me/runtrener_bot" class="cta-button">Попробовать бесплатно</a>
+            <p class="stats-info">🏃‍♂️ 64 атлета выбрали нас</p>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="container">
+            <h2>Ваши возможности</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>План тренировок под вас</h3>
+                    <p>Тренировки под ваш уровень, цели и&nbsp;свободное время. ИИ&nbsp;корректирует план по&nbsp;мере роста результатов.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Анализ прогресса</h3>
+                    <p>Видите динамику результатов и&nbsp;получаете рекомендации на&nbsp;основе ваших данных.</p>
+                </div>
+                <div class="feature-card coming-soon">
+                    <div class="feature-icon">📈</div>
+                    <h3>Дашборд прогресса</h3>
+                    <p>Визуализация всех ваших метрик в&nbsp;одном месте&nbsp;— темп, дистанция, пульс, восстановление.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏆</div>
+                    <h3>Достижение целей</h3>
+                    <p>Первые 5&nbsp;км или личный рекорд на&nbsp;марафоне&nbsp;— поможем достичь цели быстрее и&nbsp;безопаснее.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💪</div>
+                    <h3>Без травм</h3>
+                    <p>Контролируем нагрузку и&nbsp;планируем восстановление, чтобы вы&nbsp;не&nbsp;получили травму.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌟</div>
+                    <h3>Всегда на связи</h3>
+                    <p>Тренер отвечает на&nbsp;вопросы, мотивирует и&nbsp;корректирует план в&nbsp;любое время.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="roadmap">
+        <div class="container">
+            <h2>Роадмап развития</h2>
+            <div class="roadmap-timeline">
+                <div class="roadmap-item">
+                    <div class="roadmap-content">
+                        <div class="roadmap-title">📸 Распознавание тренировок по фото</div>
+                        <div class="roadmap-description">Загружайте фото экрана с&nbsp;результатами тренировки, и&nbsp;ИИ автоматически распознает и&nbsp;добавит данные в&nbsp;ваш план.</div>
+                    </div>
+                    <div class="roadmap-dot"></div>
+                </div>
+                <div class="roadmap-item">
+                    <div class="roadmap-content">
+                        <div class="roadmap-title">⌚️ Интеграции с гаджетами</div>
+                        <div class="roadmap-description">Подключение к&nbsp;популярным спортивным часам и&nbsp;фитнес-трекерам для автоматической синхронизации данных.</div>
+                    </div>
+                    <div class="roadmap-dot"></div>
+                </div>
+                <div class="roadmap-item">
+                    <div class="roadmap-content">
+                        <div class="roadmap-title">🔥 Подсчёт калорий по фото</div>
+                        <div class="roadmap-description">Фотографируйте еду, и&nbsp;тренер автоматически подсчитает калории и&nbsp;даст рекомендации по&nbsp;питанию.</div>
+                    </div>
+                    <div class="roadmap-dot"></div>
+                </div>
+                <div class="roadmap-item">
+                    <div class="roadmap-content">
+                        <div class="roadmap-title">✨ Ответы на голосовые и кружки</div>
+                        <div class="roadmap-description">Отправляйте голосовые сообщения и&nbsp;видеокружки, получайте персональные советы в&nbsp;том&nbsp;же формате.</div>
+                    </div>
+                    <div class="roadmap-dot"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <h2>Начните тренироваться умнее</h2>
+            <p>Получите первую тренировку и&nbsp;план развития бесплатно</p>
+            <a href="https://t.me/runtrener_bot" class="cta-button">Начать бесплатно</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy;&nbsp;2025 Твой тренер по&nbsp;бегу. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Функция для получения данных из Grafana через прокси
+        async function fetchGrafanaData() {
+            try {
+                console.log('Запрос данных из Grafana через прокси...');
+                
+                const response = await fetch('http://89.110.65.155:8083/api/stats');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('Данные получены:', data);
+                
+                return {
+                    athletes: data.athletes || 64
+                };
+                
+            } catch (error) {
+                console.error('Ошибка получения данных из прокси:', error);
+                // Fallback к статичным данным
+                return {
+                    athletes: 64
+                };
+            }
+        }
+
+        // Обновление статистики
+        async function updateStats() {
+            const grafanaData = await fetchGrafanaData();
+            
+            // Обновляем текст со статистикой
+            const statsInfo = document.querySelector('.stats-info');
+            if (statsInfo) {
+                statsInfo.textContent = `🏃‍♂️ ${grafanaData.athletes} атлета выбрали нас`;
+            }
+        }
+
+        // Запуск при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStats();
+        });
+
+        // Обновление каждые 5 минут
+        setInterval(updateStats, 300000);
+    </script>
+</body>
+</html>
