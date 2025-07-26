@@ -116,7 +116,7 @@
 
         .hero {
             text-align: center;
-            padding: 120px 0 80px;
+            padding: 120px 0 16px;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             width: 100%;
         }
@@ -159,6 +159,16 @@
         .cta-button:hover {
             background: #0056cc;
             transform: translateY(-1px);
+        }
+
+        .hero .stats-info {
+            font-size: 14px;
+            color: #1d1d1f !important;
+            margin-top: 72px;
+            margin-bottom: 0;
+            font-weight: 400;
+            line-height: 1.4;
+            max-width: none;
         }
 
         .features {
@@ -464,6 +474,7 @@
             <h1>Тренер, который всегда рядом</h1>
             <p>Индивидуальные планы, постоянная поддержка и гарантированный результат в удобном Telegram-боте</p>
             <a href="https://t.me/runtrener_bot" class="cta-button">Попробовать бесплатно</a>
+            <p class="stats-info">🏃‍♂️ 64 атлета выбрали нас</p>
         </div>
     </section>
 
@@ -554,5 +565,53 @@
             <p>&copy;&nbsp;2025 Твой тренер по&nbsp;бегу. Все права защищены.</p>
         </div>
     </footer>
+
+    <script>
+        // Функция для получения данных из Grafana через прокси
+        async function fetchGrafanaData() {
+            try {
+                console.log('Запрос данных из Grafana через прокси...');
+                
+                const response = await fetch('http://89.110.65.155:8083/api/stats');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('Данные получены:', data);
+                
+                return {
+                    athletes: data.athletes || 64
+                };
+                
+            } catch (error) {
+                console.error('Ошибка получения данных из прокси:', error);
+                // Fallback к статичным данным
+                return {
+                    athletes: 64
+                };
+            }
+        }
+
+        // Обновление статистики
+        async function updateStats() {
+            const grafanaData = await fetchGrafanaData();
+            
+            // Обновляем текст со статистикой
+            const statsInfo = document.querySelector('.stats-info');
+            if (statsInfo) {
+                statsInfo.textContent = `🏃‍♂️ ${grafanaData.athletes} атлета выбрали нас`;
+            }
+        }
+
+        // Запуск при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStats();
+        });
+
+        // Обновление каждые 5 минут
+        setInterval(updateStats, 300000);
+    </script>
 </body>
 </html>
