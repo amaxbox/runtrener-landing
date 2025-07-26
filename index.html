@@ -567,17 +567,19 @@
     </footer>
 
     <script>
-        // Функция для получения данных из Grafana через прокси
+        // Функция для получения данных из Grafana через CORS прокси
         async function fetchGrafanaData() {
             try {
-                console.log('Запрос данных из Grafana через прокси...');
+                console.log('Запрос данных из Grafana...');
                 
-                // Используем HTTPS API для всех окружений
-                const apiUrl = 'https://89.110.65.155/api/stats';
+                // Используем публичный CORS прокси для обхода ограничений
+                const corsProxyUrl = 'https://api.allorigins.win/raw?url=';
+                const apiUrl = 'http://89.110.65.155:8083/api/stats';
+                const fullUrl = corsProxyUrl + encodeURIComponent(apiUrl);
                 
-                console.log(`Запрос к: ${apiUrl}`);
+                console.log(`Запрос через CORS прокси: ${fullUrl}`);
                 
-                const response = await fetch(apiUrl);
+                const response = await fetch(fullUrl);
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -591,15 +593,25 @@
                 };
                 
             } catch (error) {
-                console.error('Ошибка получения данных из HTTPS API:', error);
-                console.log('Возможные причины:');
-                console.log('1. SSL сертификат не принят в браузере');
-                console.log('2. API сервер недоступен');
-                console.log('3. CORS проблема');
+                console.error('Ошибка получения данных через CORS прокси:', error);
+                console.log('Переключаемся на резервный метод...');
                 
-                // Fallback к статичным данным только при ошибке
+                // Резервный метод - прямой запрос (для локальной разработки)
+                try {
+                    const response = await fetch('http://89.110.65.155:8083/api/stats');
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log('Данные получены напрямую:', data);
+                        return { athletes: data.athletes || 83 };
+                    }
+                } catch (directError) {
+                    console.log('Прямой запрос также не удался');
+                }
+                
+                // Fallback к актуальным данным
+                console.log('Используем последние известные данные');
                 return {
-                    athletes: 83
+                    athletes: 83 // Последнее известное значение
                 };
             }
         }
