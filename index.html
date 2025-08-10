@@ -244,6 +244,62 @@
             text-transform: lowercase;
         }
 
+        .testimonials {
+            background: #ffffff;
+            padding: 80px 0;
+        }
+
+        .testimonials h2 {
+            text-align: center;
+            font-size: 40px;
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.003em;
+            margin-bottom: 60px;
+            color: #1d1d1f;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 32px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .testimonial-card {
+            background: #f5f5f7;
+            padding: 32px;
+            border-radius: 18px;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            position: relative;
+        }
+
+        .testimonial-quote {
+            font-size: 17px;
+            line-height: 1.47059;
+            color: #1d1d1f;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            font-size: 15px;
+            font-weight: 600;
+            color: #007aff;
+        }
+
+        .testimonial-card::before {
+            content: '"';
+            position: absolute;
+            top: 16px;
+            left: 24px;
+            font-size: 48px;
+            color: #007aff;
+            opacity: 0.3;
+            font-family: Georgia, serif;
+        }
+
         .cta-section {
             background: #f5f5f7;
             padding: 100px 0;
@@ -326,6 +382,15 @@
             .developer-icon,
             .tip-icon {
                 font-size: 32px;
+            }
+
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .testimonial-card {
+                padding: 24px;
             }
 
         }
@@ -413,6 +478,38 @@
                     <div class="feature-icon">⌚️</div>
                     <h3>Интеграции с гаджетами</h3>
                     <p>Подключение к&nbsp;популярным спортивным часам и&nbsp;фитнес-трекерам для автоматической синхронизации данных.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials">
+        <div class="container">
+            <h2>Что говорят наши атлеты</h2>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-quote">Все прошло хорошо. Выполнил все планы. Длительная прошла отлично, легко, без чувства усталости. Как и планировали по 5 мин на км, час двадцать. Средний пульс 147.</div>
+                    <div class="testimonial-author">— Роман</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-quote">Ты офигенный бот, спасибо! С тобой очень приятно общаться.</div>
+                    <div class="testimonial-author">— Кристина</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-quote">Неделя прошла хорошо. Пробежал что и предполагалось по задачам. В субботу сделал ОФП, а в воскресенье замкнул длительной 20 км, аэробно, средний темп 4:54.</div>
+                    <div class="testimonial-author">— Роман</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-quote">Отличный план, спасибо! Все понятно и структурированно.</div>
+                    <div class="testimonial-author">— Дмитрий</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-quote">Вчера я пробежала 14 км с набором высоты 330 метров в темпе 6:50. Самочувствие прекрасное!</div>
+                    <div class="testimonial-author">— Мария</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-quote">Ты очень сильно мне помогаешь. Чувствую себя отлично, всё по плану, достаточно легко контролирую нагрузки.</div>
+                    <div class="testimonial-author">— Роман</div>
                 </div>
             </div>
         </div>
