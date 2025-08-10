@@ -116,7 +116,7 @@
 
         .hero {
             text-align: center;
-            padding: 120px 0 16px;
+            padding: 120px 0 76px;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             width: 100%;
         }
@@ -164,7 +164,7 @@
         .hero .stats-info {
             font-size: 14px;
             color: #1d1d1f !important;
-            margin-top: 72px;
+            margin-top: 12px;
             margin-bottom: 0;
             font-weight: 400;
             line-height: 1.4;
@@ -567,42 +567,74 @@
     </footer>
 
     <script>
-        // Функция для получения данных из Grafana через прокси
+        // Функция для получения данных из Grafana через CORS прокси
         async function fetchGrafanaData() {
             try {
-                console.log('Запрос данных из Grafana через прокси...');
+                console.log('Запрос данных из Grafana...');
                 
-                const response = await fetch('http://89.110.65.155:8083/api/stats');
+                // Используем публичный CORS прокси для обхода ограничений
+                const corsProxyUrl = 'https://api.allorigins.win/raw?url=';
+                const apiUrl = 'http://89.110.65.155:8083/api/stats';
+                const fullUrl = corsProxyUrl + encodeURIComponent(apiUrl);
+                
+                console.log(`Запрос через CORS прокси: ${fullUrl}`);
+                
+                const response = await fetch(fullUrl);
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 
                 const data = await response.json();
-                console.log('Данные получены:', data);
+                console.log('Реальные данные получены из Grafana:', data);
                 
                 return {
-                    athletes: data.athletes || 64
+                    athletes: data.athletes || 83
                 };
                 
             } catch (error) {
-                console.error('Ошибка получения данных из прокси:', error);
-                // Fallback к статичным данным
+                console.error('Ошибка получения данных через CORS прокси:', error);
+                console.log('Переключаемся на резервный метод...');
+                
+                // Резервный метод - прямой запрос (для локальной разработки)
+                try {
+                    const response = await fetch('http://89.110.65.155:8083/api/stats');
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log('Данные получены напрямую:', data);
+                        return { athletes: data.athletes || 83 };
+                    }
+                } catch (directError) {
+                    console.log('Прямой запрос также не удался');
+                }
+                
+                // Fallback к актуальным данным
+                console.log('Используем последние известные данные');
                 return {
-                    athletes: 64
+                    athletes: 83 // Последнее известное значение
                 };
             }
         }
 
         // Обновление статистики
         async function updateStats() {
+            const statsInfo = document.querySelector('.stats-info');
+            
+            // Показываем индикатор загрузки
+            if (statsInfo) {
+                statsInfo.style.opacity = '0.7';
+                statsInfo.textContent = `🏃‍♂️ Обновление данных...`;
+            }
+            
             const grafanaData = await fetchGrafanaData();
             
-            // Обновляем текст со статистикой
-            const statsInfo = document.querySelector('.stats-info');
+            // Обновляем текст со статистикой с новым форматом
             if (statsInfo) {
+                statsInfo.style.opacity = '1';
                 statsInfo.textContent = `${grafanaData.athletes} 🏃‍♂️ уже с нами`;
             }
+            
+            console.log(`Статистика обновлена: ${grafanaData.athletes} атлетов в ${new Date().toLocaleTimeString()}`);
         }
 
         // Запуск при загрузке страницы
@@ -610,8 +642,8 @@
             updateStats();
         });
 
-        // Обновление каждые 5 минут
-        setInterval(updateStats, 300000);
+        // Обновление каждые 2 минуты
+        setInterval(updateStats, 120000);
     </script>
 </body>
 </html>
