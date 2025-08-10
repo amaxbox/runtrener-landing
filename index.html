@@ -265,6 +265,7 @@
             gap: 32px;
             max-width: 1200px;
             margin: 0 auto;
+            transition: opacity 0.3s ease-in-out;
         }
 
         .testimonial-card {
@@ -600,13 +601,73 @@
             console.log(`Статистика обновлена: ${grafanaData.athletes} атлетов в ${new Date().toLocaleTimeString()}`);
         }
 
-        // Запуск при загрузке страницы
+        // Массив всех отзывов
+        const allTestimonials = [
+            { quote: "Все прошло хорошо. Выполнил все планы. Длительная прошла отлично, легко, без чувства усталости. Как и планировали по 5 мин на км, час двадцать. Средний пульс 147.", author: "Роман" },
+            { quote: "Спасибо большое. Ты очень сильно мне помогаешь.", author: "Роман" },
+            { quote: "Всё хорошо, всё по плану. Чувствую себя отлично. Достаточно легко, да все контролирую.", author: "Роман" },
+            { quote: "Неделя прошла хорошо. Пробежал что и предполагалось по задачам. В субботу сделал ОФП, а в воскресенье замкнул длительной 20 км, аэробно, средний темп 4:54.", author: "Роман" },
+            { quote: "Чувствую отлично, завтра сделаю восстановительный бег.", author: "Калина" },
+            { quote: "Спасибо, буду постараться придерживаться плана.", author: "Алексей" },
+            { quote: "Большое спасибо, план реализовать скорее всего не получится, у меня свадьба 😄 напишу как буду готов.", author: "Анна" },
+            { quote: "Спасибо, буду тренироваться.", author: "Гуда" },
+            { quote: "Ты офигенный бот, спасибо!", author: "Сергей" },
+            { quote: "Спасибо, для знакомства очень даже хорошо, как буду готов с тобой начинать тренировки, напишу.", author: "Виталий" },
+            { quote: "Класс 👍🏻", author: "Дима" },
+            { quote: "Спасибо за советы!", author: "Михаил" },
+            { quote: "Подбери упражнения. Спасибо.", author: "Ева" },
+            { quote: "Все прошло отлично!", author: "Андрей" },
+            { quote: "Отлично!", author: "Ольга" },
+            { quote: "Да, отлично, начинаем!", author: "Катя" },
+            { quote: "Ты такой крутой бот, с тобой очень приятно общаться.", author: "Кристина" },
+            { quote: "Да, спасибо.", author: "Наталья" },
+            { quote: "Спасибо, вчера я пробежала 14 км с набором высоты 330 метров в темпе 6:50.", author: "Мария" },
+            { quote: "Самочувствие прекрасное, завтра планирую сделать 1000 набора высоты.", author: "Мария" },
+            { quote: "Большое тебе спасибо.", author: "Анатолий" },
+            { quote: "Спасибо.", author: "Руслан" },
+            { quote: "Спасибо, все понятно.", author: "Елена" },
+            { quote: "Отличный план, спасибо.", author: "Дмитрий" },
+            { quote: "Спасибо, все понятно.", author: "Максим" }
+        ];
+
+        // Функция для случайного выбора отзывов
+        function getRandomTestimonials(count = 6) {
+            const shuffled = [...allTestimonials].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+
+        // Функция для обновления отзывов
+        function updateTestimonials() {
+            const testimonialsGrid = document.querySelector('.testimonials-grid');
+            if (!testimonialsGrid) return;
+
+            const randomTestimonials = getRandomTestimonials(6);
+            
+            // Добавляем fade-out эффект
+            testimonialsGrid.style.opacity = '0.3';
+            
+            setTimeout(() => {
+                testimonialsGrid.innerHTML = randomTestimonials.map(testimonial => `
+                    <div class="testimonial-card">
+                        <div class="testimonial-quote">${testimonial.quote}</div>
+                        <div class="testimonial-author">— ${testimonial.author}</div>
+                    </div>
+                `).join('');
+                
+                // Fade-in эффект
+                testimonialsGrid.style.opacity = '1';
+            }, 200);
+        }
+
+        // Инициализация при загрузке страницы
         document.addEventListener('DOMContentLoaded', function() {
             updateStats();
+            updateTestimonials();
         });
 
-        // Обновление каждые 2 минуты
-        setInterval(updateStats, 120000);
+        // Периодические обновления
+        setInterval(updateStats, 120000); // Статистика каждые 2 минуты
+        setInterval(updateTestimonials, 10000); // Отзывы каждые 10 секунд
     </script>
 </body>
 </html>
