@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Твой тренер по бегу - Ваш ИИ-тренер по бегу</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --accent: #06d6a0;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: #ffffff;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            font-size: 28px;
+        }
+
+        .header-links {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .header-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .header-link:hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 120px 0 80px;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+        }
+
+        .hero h1 {
+            font-size: clamp(32px, 8vw, 64px);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--primary);
+            color: white;
+            padding: 16px 32px;
+            text-decoration: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px 0 rgba(99, 102, 241, 0.3);
+        }
+
+        .cta-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px 0 rgba(99, 102, 241, 0.4);
+        }
+
+        .stats-info {
+            font-size: 16px;
+            color: var(--text-muted);
+            margin-top: 32px;
+            font-weight: 500;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 0;
+            background: var(--bg-primary);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 20px;
+            color: var(--text-secondary);
+            margin-bottom: 64px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .feature-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .feature-card h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .coming-soon {
+            position: relative;
+        }
+
+        .coming-soon::before {
+            content: 'Скоро';
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            background: var(--bg-secondary);
+            padding: 100px 0;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .testimonial-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 28px;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .testimonial-card:hover {
+            border-color: var(--border-hover);
+        }
+
+        .testimonial-quote {
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 100px 0;
+            text-align: center;
+            color: white;
+        }
+
+        .cta-section h2 {
+            font-size: 40px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .cta-section p {
+            font-size: 20px;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .cta-button-white {
+            background: white;
+            color: var(--primary);
+        }
+
+        .cta-button-white:hover {
+            background: var(--bg-secondary);
+            color: var(--primary-dark);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--text-primary);
+            color: var(--text-muted);
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        footer p {
+            font-size: 14px;
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 20px;
+            }
+            
+            .hero {
+                padding: 100px 0 60px;
+            }
+            
+            .features-grid,
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-links {
+                gap: 8px;
+            }
+            
+            .header-link span {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <div class="logo">
+                <span class="logo-icon">🏃‍♂️</span>
+                <span>Твой тренер</span>
+            </div>
+            <div class="header-links">
+                <a href="https://t.me/+fuPN8ZZKjSBiMzUy" class="header-link">
+                    <span>💬</span>
+                    <span>Написать</span>
+                </a>
+                <a href="https://spasibomir.ru/pay/25369" class="header-link">
+                    <span>💰</span>
+                    <span>Чаевые</span>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Тренер, который всегда рядом</h1>
+            <p>Индивидуальные планы, постоянная поддержка и гарантированный результат в удобном Telegram-боте</p>
+            <a href="https://t.me/runtrener_bot" class="cta-button">
+                Попробовать бесплатно
+                <span>→</span>
+            </a>
+            <p class="stats-info" id="stats-info">736 🏃‍♂️ уже с нами</p>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Ваши возможности</h2>
+            <p class="section-subtitle">Все инструменты для достижения ваших беговых целей в одном месте</p>
+            <div class="features-grid" id="features-grid">
+                <!-- Features will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">Что говорят наши атлеты</h2>
+            <p class="section-subtitle">Истории успеха от реальных пользователей</p>
+            <div class="testimonials-grid" id="testimonials-grid">
+                <!-- Testimonials will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Начните тренироваться умнее</h2>
+            <p>Получите первую тренировку и план развития бесплатно</p>
+            <a href="https://t.me/runtrener_bot" class="cta-button cta-button-white">
+                Начать бесплатно
+                <span>→</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Твой тренер по бегу. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Features data
+        const features = [
+            { icon: "📸", title: "Распознавание тренировок по фото", description: "Загружайте фото экрана с результатами тренировки, и ИИ автоматически распознает и добавит данные в ваш план.", comingSoon: false },
+            { icon: "🔥", title: "Подсчёт калорий по фото", description: "Фотографируйте еду, и тренер автоматически подсчитает калории и даст рекомендации по питанию.", comingSoon: false },
+            { icon: "🎤", title: "Голосовые сообщения", description: "Отправляйте голосовые сообщения и видеокружки, получайте персональные советы в том же формате.", comingSoon: false },
+            { icon: "🎯", title: "План тренировок под вас", description: "Тренировки под ваш уровень, цели и свободное время. ИИ корректирует план по мере роста результатов.", comingSoon: false },
+            { icon: "📊", title: "Анализ прогресса", description: "Видите динамику результатов и получаете рекомендации на основе ваших данных.", comingSoon: false },
+            { icon: "🏆", title: "Достижение целей", description: "Первые 5 км или личный рекорд на марафоне — поможем достичь цели быстрее и безопаснее.", comingSoon: false },
+            { icon: "💪", title: "Без травм", description: "Контролируем нагрузку и планируем восстановление, чтобы вы не получили травму.", comingSoon: false },
+            { icon: "🌟", title: "Всегда на связи", description: "Тренер отвечает на вопросы, мотивирует и корректирует план в любое время.", comingSoon: false },
+            { icon: "📈", title: "Дашборд прогресса", description: "Визуализация всех ваших метрик в одном месте — темп, дистанция, пульс, восстановление.", comingSoon: true },
+            { icon: "⌚️", title: "Интеграции с гаджетами", description: "Подключение к популярным спортивным часам и фитнес-трекерам для автоматической синхронизации данных.", comingSoon: true }
+        ];
+
+        // Testimonials data (same as before)
+        const allTestimonials = [
+            { quote: "Все прошло хорошо. Выполнил все планы. Длительная прошла отлично, легко, без чувства усталости.", author: "Роман" },
+            { quote: "Ты офигенный бот, спасибо! С тобой очень приятно общаться.", author: "Кристина" },
+            { quote: "Отличный план, спасибо! Все понятно и структурированно.", author: "Дмитрий" },
+            { quote: "Вчера я пробежала 14 км с набором высоты 330 метров. Самочувствие прекрасное!", author: "Мария" },
+            { quote: "Чувствую себя отлично, всё по плану, достаточно легко контролирую нагрузки.", author: "Роман" },
+            { quote: "Спасибо, буду постараться придерживаться плана.", author: "Алексей" }
+        ];
+
+        // Functions (same logic as before)
+        function renderFeatures() {
+            const grid = document.getElementById('features-grid');
+            grid.innerHTML = features.map(feature => `
+                <div class="feature-card ${feature.comingSoon ? 'coming-soon' : ''}">
+                    <div class="feature-icon">${feature.icon}</div>
+                    <h3>${feature.title}</h3>
+                    <p>${feature.description}</p>
+                </div>
+            `).join('');
+        }
+
+        function getRandomTestimonials(count = 6) {
+            const shuffled = [...allTestimonials].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+
+        function updateTestimonials() {
+            const grid = document.getElementById('testimonials-grid');
+            const randomTestimonials = getRandomTestimonials(6);
+            
+            grid.style.opacity = '0.3';
+            setTimeout(() => {
+                grid.innerHTML = randomTestimonials.map(testimonial => `
+                    <div class="testimonial-card">
+                        <div class="testimonial-quote">${testimonial.quote}</div>
+                        <div class="testimonial-author">— ${testimonial.author}</div>
+                    </div>
+                `).join('');
+                grid.style.opacity = '1';
+            }, 200);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderFeatures();
+            updateTestimonials();
+        });
+
+        // Auto-rotate testimonials
+        setInterval(updateTestimonials, 10000);
+    </script>
+</body>
+</html>

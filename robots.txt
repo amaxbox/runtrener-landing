@@ -1,0 +1,24 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://runtrener.ru/sitemap.xml
+
+# Основные поисковые боты
+User-agent: Googlebot
+Allow: /
+
+User-agent: Yandex
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Запрещаем доступ к техническим файлам
+Disallow: *.log$
+Disallow: /deploy-temp/
+Disallow: /nginx*.conf
+Disallow: /deploy.sh
+
+# Частота обхода для основной страницы
+Crawl-delay: 1
