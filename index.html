@@ -99,6 +99,14 @@
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/103377759" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     <!-- /Yandex.Metrika counter -->
+    
+    <!-- Для ВК -->
+    <script type="text/javascript">!function(){var t=document.createElement("script");t.type="text/javascript",t.async=!0,t.src='https://vk.ru/js/api/openapi.js?173',t.onload=function(){VK.Retargeting.Init("VK-RTRG-1964486-1dtcr"),VK.Retargeting.Hit()},document.head.appendChild(t)}();</script>
+    <noscript><img src="https://vk.ru/rtrg?p=VK-RTRG-1964486-1dtcr" style="position:fixed; left:-999px;" alt=""/></noscript>
+    <!-- /Для ВК -->
+    
+    <link rel="stylesheet" href="/css/main.css">
+    
     <style>
         * {
             margin: 0;
@@ -149,8 +157,11 @@
             gap: 8px;
         }
 
-        .logo-icon {
-            font-size: 42px;
+        .logo-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 21px;
+            object-fit: cover;
         }
 
         .developer-link {
@@ -454,6 +465,221 @@
             color: white;
         }
 
+        /* Стили для секции "Как работает тренер" */
+        .how-it-works {
+            background: #ffffff;
+            padding: 100px 0;
+        }
+
+        .how-it-works h2 {
+            text-align: center;
+            font-size: 40px;
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.003em;
+            margin-bottom: 16px;
+            color: #1d1d1f;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 21px;
+            line-height: 1.381;
+            font-weight: 400;
+            margin-bottom: 60px;
+            color: #86868b;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 60px;
+        }
+
+        .demo-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .chat-messages {
+            padding: 20px;
+            height: 400px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            gap: 20px;
+            position: relative;
+            background: #f5f5f7;
+            border-radius: 20px;
+        }
+
+        .message {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            animation: messageAppear 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            font-size: 20px;
+            width: 32px;
+            height: 32px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .message.bot .message-avatar {
+            background: #007aff;
+            color: white;
+        }
+
+        .message.user .message-avatar {
+            background: #34c759;
+            color: white;
+        }
+
+        .message-content {
+            max-width: 75%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 15px;
+            line-height: 1.4;
+            position: relative;
+        }
+
+        .message.bot .message-content {
+            background: #ffffff;
+            color: #1d1d1f;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .message.user .message-content {
+            background: #007aff;
+            color: white;
+        }
+
+        .message-time {
+            font-size: 12px;
+            opacity: 0.6;
+            margin-top: 4px;
+            text-align: right;
+        }
+
+        .message.user .message-time {
+            text-align: left;
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: #ffffff;
+            border-radius: 18px;
+            max-width: 75%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #86868b;
+            animation: typingPulse 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typingPulse {
+            0%, 60%, 100% { opacity: 0.3; }
+            30% { opacity: 1; }
+        }
+
+        @keyframes messageAppear {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes messageDisappear {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-30px) scale(0.95);
+            }
+        }
+
+        /* Стили для особенностей тренера */
+        .coach-features {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .coach-features .feature-icon {
+            font-size: 32px;
+            width: 56px;
+            height: 56px;
+            background: #f5f5f7;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .feature-content h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1d1d1f;
+            line-height: 1.2;
+        }
+
+        .feature-content p {
+            font-size: 15px;
+            line-height: 1.4;
+            color: #86868b;
+            margin: 0;
+        }
+
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 40px;
@@ -475,8 +701,10 @@
                 font-size: 20px;
             }
 
-            .logo-icon {
-                font-size: 40px;
+            .logo-avatar {
+                width: 40px;
+                height: 40px;
+                border-radius: 20px;
             }
 
 
@@ -510,6 +738,36 @@
                 padding: 24px;
             }
 
+            .chat-messages {
+                padding: 16px;
+                height: 350px;
+            }
+
+            .coach-features {
+                gap: 16px;
+                margin-top: 24px;
+            }
+
+            .feature-item {
+                padding: 16px;
+                gap: 12px;
+            }
+
+            .coach-features .feature-icon {
+                width: 48px;
+                height: 48px;
+                font-size: 24px;
+            }
+
+            .feature-content h4 {
+                font-size: 16px;
+                margin-bottom: 6px;
+            }
+
+            .feature-content p {
+                font-size: 14px;
+            }
+
         }
     </style>
 </head>
@@ -517,7 +775,7 @@
     <header>
         <nav class="container">
             <div class="logo">
-                <span class="logo-icon">🏃‍♂️</span>
+                <img src="/generated-image.jpg" alt="Тренер по бегу" class="logo-avatar">
                 <span class="logo-text">Твой тренер по бегу</span>
             </div>
             <div class="header-links">
@@ -605,6 +863,43 @@
         </div>
     </section>
 
+    <section class="how-it-works">
+        <div class="container">
+            <h2>Как работает тренер</h2>
+            <p class="section-subtitle">Посмотрите, как проходит первое знакомство с вашим персональным тренером</p>
+            
+            <div class="demo-container">
+                <div class="chat-messages" id="chat-messages">
+                    <!-- Сообщения будут добавляться динамически -->
+                </div>
+                
+                <div class="coach-features">
+                    <div class="feature-item">
+                        <div class="feature-icon">⚡</div>
+                        <div class="feature-content">
+                            <h4>Мгновенный анализ</h4>
+                            <p>Тренер анализирует ваши данные и сразу предлагает решение</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🎯</div>
+                        <div class="feature-content">
+                            <h4>Персональный подход</h4>
+                            <p>Каждый план создается индивидуально под ваши цели и возможности</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">📈</div>
+                        <div class="feature-content">
+                            <h4>Постепенный прогресс</h4>
+                            <p>Безопасное увеличение нагрузки для достижения результата</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="testimonials">
         <div class="container">
             <h2>Отзывы о тренере по бегу - реальные результаты</h2>
@@ -660,179 +955,9 @@
         </div>
     </footer>
 
-    <script>
-        // Функция для получения данных из Grafana через CORS прокси
-        async function fetchGrafanaData() {
-            try {
-                console.log('Запрос данных из Grafana...');
-                
-                // Используем локальный прокси для получения данных
-                const fullUrl = '/stats-proxy.php';
-                
-                console.log(`Запрос через локальный прокси: ${fullUrl}`);
-                
-                const response = await fetch(fullUrl);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                console.log('Реальные данные получены из Grafana:', data);
-                
-                return {
-                    athletes: data.athletes || 1056
-                };
-                
-            } catch (error) {
-                console.error('Ошибка получения данных через локальный прокси:', error);
-                
-                // Fallback к актуальным данным
-                console.log('Используем последние известные данные');
-                return {
-                    athletes: 1056 // Последнее известное значение
-                };
-            }
-        }
-
-        // Обновление статистики
-        async function updateStats() {
-            const statsInfo = document.querySelector('.stats-info');
-            
-            // Показываем индикатор загрузки
-            if (statsInfo) {
-                statsInfo.style.opacity = '0.7';
-                statsInfo.textContent = `🏃‍♂️ Обновление данных...`;
-            }
-            
-            const grafanaData = await fetchGrafanaData();
-            
-            // Обновляем текст со статистикой с новым форматом
-            if (statsInfo) {
-                statsInfo.style.opacity = '1';
-                statsInfo.textContent = `${grafanaData.athletes} 🏃‍♂️ уже с нами`;
-            }
-            
-            console.log(`Статистика обновлена: ${grafanaData.athletes} атлетов в ${new Date().toLocaleTimeString()}`);
-        }
-
-        // Массив всех отзывов
-        const allTestimonials = [
-            { quote: "Бот-тренер помог мне подготовиться к первому полумарафону. Индивидуальный план тренировок и постоянная поддержка - именно то, что нужно новичку. Результат 1:55 превзошел все ожидания!", author: "Анна Петрова" },
-            { quote: "Цель была амбициозная - улучшить результаты на всех дистанциях одновременно. Бот составил идеальный план: 10км за 55 минут уже достиг, теперь иду к заветным 25 минутам на 5км. Спасибо за системный подход!", author: "Дмитрий Козлов" },
-            { quote: "Отправляю боту скриншоты тренировок из приложения - он мгновенно анализирует данные и дает конкретные рекомендации. Прогрессивные тренировки стали намного эффективнее!", author: "Мария Сидорова" },
-            { quote: "Удобно отправлять голосовые сообщения о тренировках - бот всё понимает и дает развернутые ответы. Обратная связь всегда конструктивная и мотивирующая!", author: "Алексей Иванов" },
-            { quote: "Пробежала марафон 'Белые ночи' за 4:18 благодаря подготовке с ботом. Теперь цель - покорить рубеж 4 часов. Верю, что с таким тренером это реально!", author: "Елена Морозова" },
-            { quote: "Фотографирую свои завтраки и обеды - бот считает КБЖУ и дает советы по питанию для бегунов. Это помогает поддерживать оптимальный вес и энергию для тренировок!", author: "Сергей Васильев" },
-            { quote: "Мечтаю о мастере спорта по бегу! Текущие результаты: 10км за 54 минуты. Бот помогает планомерно идти к цели, учитывая мои физические данные и возможности. В 33 года всё только начинается!", author: "Ольга Романова" },
-            { quote: "Разнообразие тренировок впечатляет: равномерный бег, фартлек, интервалы, повторы. Бот объясняет цель каждой тренировки и помогает выполнять их правильно. Прогресс очевиден!", author: "Игорь Соколов" },
-            { quote: "Готовлюсь к марафону с целью 3:40-3:50. Бот учитывает даже погодные условия при анализе тренировок! 100-минутная пробежка в жару прошла под его контролем.", author: "Татьяна Волкова" },
-            { quote: "Начал путь к марафону с большим лишним весом. Бот составил щадящий план, который постепенно готовит к большим нагрузкам. Уже чувствую прогресс и уверенность!", author: "Андрей Новиков" },
-            { quote: "Все прошло хорошо. Выполнил все планы. Длительная прошла отлично, легко, без чувства усталости. Как и планировали по 5 мин на км, час двадцать. Средний пульс 147.", author: "Роман" },
-            { quote: "Ты офигенный бот, спасибо! С тобой очень приятно общаться.", author: "Кристина" },
-            { quote: "Неделя прошла хорошо. Пробежал что и предполагалось по задачам. В субботу сделал ОФП, а в воскресенье замкнул длительной 20 км, аэробно, средний темп 4:54.", author: "Роман" },
-            { quote: "Отличный план, спасибо! Все понятно и структурированно.", author: "Дмитрий" },
-            { quote: "Вчера я пробежала 14 км с набором высоты 330 метров в темпе 6:50. Самочувствие прекрасное!", author: "Мария" },
-            { quote: "Ты очень сильно мне помогаешь. Чувствую себя отлично, всё по плану, достаточно легко контролирую нагрузки.", author: "Роман" }
-        ];
-
-        // Функция для случайного выбора отзывов
-        function getRandomTestimonials(count = 6) {
-            const shuffled = [...allTestimonials].sort(() => 0.5 - Math.random());
-            return shuffled.slice(0, count);
-        }
-
-        // Функция для обновления отзывов
-        function updateTestimonials() {
-            const testimonialsGrid = document.querySelector('.testimonials-grid');
-            if (!testimonialsGrid) return;
-
-            const randomTestimonials = getRandomTestimonials(6);
-            
-            // Добавляем fade-out эффект
-            testimonialsGrid.style.opacity = '0.3';
-            
-            setTimeout(() => {
-                testimonialsGrid.innerHTML = randomTestimonials.map(testimonial => `
-                    <div class="testimonial-card">
-                        <div class="testimonial-quote">${testimonial.quote}</div>
-                        <div class="testimonial-author">— ${testimonial.author}</div>
-                    </div>
-                `).join('');
-                
-                // Fade-in эффект
-                testimonialsGrid.style.opacity = '1';
-            }, 200);
-        }
-
-        // Определение языка пользователя и редирект
-        function detectLanguageAndRedirect() {
-            // Проверяем, не находимся ли мы уже на нужной странице
-            if (window.location.pathname === '/en/' || window.location.pathname.includes('index-en')) {
-                return; // Уже на английской версии
-            }
-            
-            // Проверяем localStorage для сохраненного выбора
-            const savedLanguage = localStorage.getItem('preferredLanguage');
-            if (savedLanguage === 'en') {
-                window.location.href = '/en/';
-                return;
-            }
-            
-            // Если язык уже был выбран, не перенаправляем
-            if (savedLanguage) {
-                return;
-            }
-            
-            // Получаем языки браузера
-            const browserLanguage = navigator.language || navigator.languages[0];
-            
-            // Если английский является основным языком, перенаправляем
-            if (browserLanguage.startsWith('en')) {
-                // Сохраняем выбор
-                localStorage.setItem('preferredLanguage', 'en');
-                window.location.href = '/en/';
-            } else {
-                // Сохраняем русский как предпочтение
-                localStorage.setItem('preferredLanguage', 'ru');
-            }
-        }
-
-        // Обработчики переключения языка
-        function setupLanguageSwitchers() {
-            const languageLinks = document.querySelectorAll('.language-switch a');
-            languageLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const href = this.getAttribute('href');
-                    const language = href === '/en/' ? 'en' : 'ru';
-                    
-                    // Сохраняем выбор пользователя
-                    localStorage.setItem('preferredLanguage', language);
-                    
-                    // Переходим на выбранную версию
-                    window.location.href = href;
-                });
-            });
-        }
-
-        // Инициализация при загрузке страницы
-        document.addEventListener('DOMContentLoaded', function() {
-            // Проверяем язык только если это главная страница
-            if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
-                detectLanguageAndRedirect();
-            }
-            
-            // Настраиваем переключатели языков
-            setupLanguageSwitchers();
-            
-            updateStats();
-            updateTestimonials();
-        });
-
-        // Периодические обновления
-        setInterval(updateStats, 120000); // Статистика каждые 2 минуты
-        setInterval(updateTestimonials, 10000); // Отзывы каждые 10 секунд
-    </script>
+    <script src="/js/stats.js"></script>
+    <script src="/js/testimonials.js"></script>
+    <script src="/js/demo.js"></script>
+    <script src="/js/main.js"></script>
 </body>
 </html>
