@@ -99,6 +99,14 @@
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/103377759" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     <!-- /Yandex.Metrika counter -->
+    
+    <!-- Для ВК -->
+    <script type="text/javascript">!function(){var t=document.createElement("script");t.type="text/javascript",t.async=!0,t.src='https://vk.ru/js/api/openapi.js?173',t.onload=function(){VK.Retargeting.Init("VK-RTRG-1964486-1dtcr"),VK.Retargeting.Hit()},document.head.appendChild(t)}();</script>
+    <noscript><img src="https://vk.ru/rtrg?p=VK-RTRG-1964486-1dtcr" style="position:fixed; left:-999px;" alt=""/></noscript>
+    <!-- /Для ВК -->
+    
+    <link rel="stylesheet" href="/css/main-en.css">
+    
     <style>
         * {
             margin: 0;
@@ -149,8 +157,11 @@
             gap: 8px;
         }
 
-        .logo-icon {
-            font-size: 42px;
+        .logo-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 21px;
+            object-fit: cover;
         }
 
         .developer-link {
@@ -454,6 +465,221 @@
             color: white;
         }
 
+        /* Styles for "How the Coach Works" section */
+        .how-it-works {
+            background: #ffffff;
+            padding: 100px 0;
+        }
+
+        .how-it-works h2 {
+            text-align: center;
+            font-size: 40px;
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.003em;
+            margin-bottom: 16px;
+            color: #1d1d1f;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 21px;
+            line-height: 1.381;
+            font-weight: 400;
+            margin-bottom: 60px;
+            color: #86868b;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 60px;
+        }
+
+        .demo-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .chat-messages {
+            padding: 20px;
+            height: 400px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            gap: 20px;
+            position: relative;
+            background: #f5f5f7;
+            border-radius: 20px;
+        }
+
+        .message {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            animation: messageAppear 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            font-size: 20px;
+            width: 32px;
+            height: 32px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .message.bot .message-avatar {
+            background: #007aff;
+            color: white;
+        }
+
+        .message.user .message-avatar {
+            background: #34c759;
+            color: white;
+        }
+
+        .message-content {
+            max-width: 75%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 15px;
+            line-height: 1.4;
+            position: relative;
+        }
+
+        .message.bot .message-content {
+            background: #ffffff;
+            color: #1d1d1f;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .message.user .message-content {
+            background: #007aff;
+            color: white;
+        }
+
+        .message-time {
+            font-size: 12px;
+            opacity: 0.6;
+            margin-top: 4px;
+            text-align: right;
+        }
+
+        .message.user .message-time {
+            text-align: left;
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: #ffffff;
+            border-radius: 18px;
+            max-width: 75%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #86868b;
+            animation: typingPulse 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typingPulse {
+            0%, 60%, 100% { opacity: 0.3; }
+            30% { opacity: 1; }
+        }
+
+        @keyframes messageAppear {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes messageDisappear {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-30px) scale(0.95);
+            }
+        }
+
+        /* Styles for coach features */
+        .coach-features {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .coach-features .feature-icon {
+            font-size: 32px;
+            width: 56px;
+            height: 56px;
+            background: #f5f5f7;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .feature-content h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1d1d1f;
+            line-height: 1.2;
+        }
+
+        .feature-content p {
+            font-size: 15px;
+            line-height: 1.4;
+            color: #86868b;
+            margin: 0;
+        }
+
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 40px;
@@ -475,8 +701,10 @@
                 font-size: 20px;
             }
 
-            .logo-icon {
-                font-size: 40px;
+            .logo-avatar {
+                width: 40px;
+                height: 40px;
+                border-radius: 20px;
             }
 
 
@@ -510,6 +738,36 @@
                 padding: 24px;
             }
 
+            .chat-messages {
+                padding: 16px;
+                height: 350px;
+            }
+
+            .coach-features {
+                gap: 16px;
+                margin-top: 24px;
+            }
+
+            .feature-item {
+                padding: 16px;
+                gap: 12px;
+            }
+
+            .coach-features .feature-icon {
+                width: 48px;
+                height: 48px;
+                font-size: 24px;
+            }
+
+            .feature-content h4 {
+                font-size: 16px;
+                margin-bottom: 6px;
+            }
+
+            .feature-content p {
+                font-size: 14px;
+            }
+
         }
     </style>
 </head>
@@ -517,7 +775,7 @@
     <header>
         <nav class="container">
             <div class="logo">
-                <span class="logo-icon">🏃‍♂️</span>
+                <img src="/generated-image.jpg" alt="Running Coach" class="logo-avatar">
                 <span class="logo-text">Your Running Coach</span>
             </div>
             <div class="header-links">
@@ -605,6 +863,43 @@
         </div>
     </section>
 
+    <section class="how-it-works">
+        <div class="container">
+            <h2>How the Coach Works</h2>
+            <p class="section-subtitle">See how the first introduction to your personal coach goes</p>
+            
+            <div class="demo-container">
+                <div class="chat-messages" id="chat-messages">
+                    <!-- Messages will be added dynamically -->
+                </div>
+                
+                <div class="coach-features">
+                    <div class="feature-item">
+                        <div class="feature-icon">⚡</div>
+                        <div class="feature-content">
+                            <h4>Instant Analysis</h4>
+                            <p>The coach analyzes your data and immediately offers solutions</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🎯</div>
+                        <div class="feature-content">
+                            <h4>Personal Approach</h4>
+                            <p>Every plan is created individually for your goals and capabilities</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">📈</div>
+                        <div class="feature-content">
+                            <h4>Gradual Progress</h4>
+                            <p>Safe load increases to achieve your results</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="testimonials">
         <div class="container">
             <h2>Running Coach Reviews - Real Results</h2>
@@ -660,183 +955,9 @@
         </div>
     </footer>
 
-    <script>
-        // Function to get Grafana data through CORS proxy
-        async function fetchGrafanaData() {
-            try {
-                console.log('Fetching data from Grafana...');
-                
-                // Use local proxy to get data
-                const fullUrl = '/stats-proxy.php';
-                
-                console.log(`Request through local proxy: ${fullUrl}`);
-                
-                const response = await fetch(fullUrl);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                console.log('Real data received from Grafana:', data);
-                
-                return {
-                    athletes: data.athletes || 1056
-                };
-                
-            } catch (error) {
-                console.error('Error getting data through local proxy:', error);
-                
-                // Fallback to current data
-                console.log('Using last known data');
-                return {
-                    athletes: 1056 // Last known value
-                };
-            }
-        }
-
-        // Update statistics
-        async function updateStats() {
-            const statsInfo = document.querySelector('.stats-info');
-            
-            // Show loading indicator
-            if (statsInfo) {
-                statsInfo.style.opacity = '0.7';
-                statsInfo.textContent = `🏃‍♂️ Updating data...`;
-            }
-            
-            const grafanaData = await fetchGrafanaData();
-            
-            // Update statistics text with new format
-            if (statsInfo) {
-                statsInfo.style.opacity = '1';
-                statsInfo.textContent = `${grafanaData.athletes} 🏃‍♂️ already with us`;
-            }
-            
-            console.log(`Statistics updated: ${grafanaData.athletes} athletes at ${new Date().toLocaleTimeString()}`);
-        }
-
-        // Array of all testimonials
-        const allTestimonials = [
-            { quote: "The bot-coach helped me prepare for my first half marathon. Individual training plan and constant support - exactly what a beginner needs. The 1:55 result exceeded all expectations!", author: "Anna Peterson" },
-            { quote: "The goal was ambitious - to improve results on all distances simultaneously. The bot created an ideal plan: already achieved 10K in 55 minutes, now going for the coveted 25 minutes on 5K. Thanks for the systematic approach!", author: "David Clark" },
-            { quote: "I send the bot screenshots of workouts from the app - it instantly analyzes the data and gives specific recommendations. Progressive workouts have become much more effective!", author: "Maria Smith" },
-            { quote: "It's convenient to send voice messages about workouts - the bot understands everything and gives detailed answers. The feedback is always constructive and motivating!", author: "Alex Johnson" },
-            { quote: "Ran the marathon in 4:18 thanks to training with the bot. Now the goal is to conquer the 4-hour mark. I believe it's achievable with such a coach!", author: "Elena Brown" },
-            { quote: "I photograph my breakfasts and lunches - the bot counts calories and gives nutrition advice for runners. It helps maintain optimal weight and energy for workouts!", author: "Steve Wilson" },
-            { quote: "Dreaming of becoming a master of sport in running! Current results: 10K in 54 minutes. The bot helps steadily move toward the goal, considering my physical data and capabilities. At 33, everything is just beginning!", author: "Olga Taylor" },
-            { quote: "The variety of workouts is impressive: steady runs, fartlek, intervals, repeats. The bot explains the purpose of each workout and helps execute them correctly. Progress is obvious!", author: "Igor Davis" },
-            { quote: "Preparing for a marathon with a goal of 3:40-3:50. The bot even considers weather conditions when analyzing workouts! A 100-minute run in the heat went under its control.", author: "Tanya Miller" },
-            { quote: "Started the path to marathon with significant excess weight. The bot created a gentle plan that gradually prepares for big loads. Already feeling progress and confidence!", author: "Andrew White" },
-            { quote: "Everything went well. Completed all plans. The long run went excellently, easily, without fatigue. As planned at 5 min per km, one hour twenty. Average heart rate 147.", author: "Roman" },
-            { quote: "You're an awesome bot, thank you! It's very pleasant to communicate with you.", author: "Christina" },
-            { quote: "The week went well. Ran what was expected according to tasks. On Saturday did strength training, and on Sunday closed with a long 20K, aerobic, average pace 4:54.", author: "Roman" },
-            { quote: "Excellent plan, thank you! Everything is clear and structured.", author: "Dmitry" },
-            { quote: "Yesterday I ran 14K with 330 meters of elevation gain at 6:50 pace. Feeling great!", author: "Maria" },
-            { quote: "You help me so much. I feel great, everything is according to plan, I can easily control the loads.", author: "Roman" }
-        ];
-
-        // Function to randomly select testimonials
-        function getRandomTestimonials(count = 6) {
-            const shuffled = [...allTestimonials].sort(() => 0.5 - Math.random());
-            return shuffled.slice(0, count);
-        }
-
-        // Function to update testimonials
-        function updateTestimonials() {
-            const testimonialsGrid = document.querySelector('.testimonials-grid');
-            if (!testimonialsGrid) return;
-
-            const randomTestimonials = getRandomTestimonials(6);
-            
-            // Add fade-out effect
-            testimonialsGrid.style.opacity = '0.3';
-            
-            setTimeout(() => {
-                testimonialsGrid.innerHTML = randomTestimonials.map(testimonial => `
-                    <div class="testimonial-card">
-                        <div class="testimonial-quote">${testimonial.quote}</div>
-                        <div class="testimonial-author">— ${testimonial.author}</div>
-                    </div>
-                `).join('');
-                
-                // Fade-in effect
-                testimonialsGrid.style.opacity = '1';
-            }, 200);
-        }
-
-        // Language detection and redirect for Russian speakers
-        function detectLanguageAndRedirect() {
-            // Check if we're already on the right page
-            if (window.location.pathname === '/' || window.location.pathname.includes('index.html')) {
-                return; // Already on Russian version
-            }
-            
-            // Check localStorage for saved choice
-            const savedLanguage = localStorage.getItem('preferredLanguage');
-            if (savedLanguage === 'ru') {
-                window.location.href = '/';
-                return;
-            }
-            
-            // If language was already chosen, don't redirect
-            if (savedLanguage) {
-                return;
-            }
-            
-            // Get browser languages
-            const browserLanguages = navigator.languages || [navigator.language];
-            
-            // Check if Russian is among preferred languages
-            const hasRussian = browserLanguages.some(lang => 
-                lang.startsWith('ru') || lang.includes('ru')
-            );
-            
-            if (hasRussian) {
-                // Save choice
-                localStorage.setItem('preferredLanguage', 'ru');
-                window.location.href = '/';
-            } else {
-                // Save English as preference
-                localStorage.setItem('preferredLanguage', 'en');
-            }
-        }
-
-        // Language switcher handlers
-        function setupLanguageSwitchers() {
-            const languageLinks = document.querySelectorAll('.language-switch a');
-            languageLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const href = this.getAttribute('href');
-                    const language = href === '/en/' ? 'en' : 'ru';
-                    
-                    // Save user choice
-                    localStorage.setItem('preferredLanguage', language);
-                    
-                    // Navigate to selected version
-                    window.location.href = href;
-                });
-            });
-        }
-
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            // Check language only if this is the English page
-            if (window.location.pathname === '/en/' || window.location.pathname.includes('index-en')) {
-                detectLanguageAndRedirect();
-            }
-            
-            // Setup language switchers
-            setupLanguageSwitchers();
-            
-            updateStats();
-            updateTestimonials();
-        });
-
-        // Periodic updates
-        setInterval(updateStats, 120000); // Statistics every 2 minutes
-        setInterval(updateTestimonials, 10000); // Testimonials every 10 seconds
-    </script>
+    <script src="/js/stats-en.js"></script>
+    <script src="/js/testimonials-en.js"></script>
+    <script src="/js/demo-en.js"></script>
+    <script src="/js/main-en.js"></script>
 </body>
 </html>
