@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RunTrainer - Project Presentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #ffffff;
+            color: #1d1d1f;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .presentation {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .slide {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 22px;
+            text-align: center;
+            page-break-after: always;
+            background: #ffffff;
+            position: relative;
+        }
+        
+        .slide.title {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        
+        .slide.final {
+            background: #f5f5f7;
+        }
+        
+        h1 {
+            font-size: 56px;
+            font-weight: 700;
+            line-height: 1.07143;
+            letter-spacing: -0.005em;
+            margin-bottom: 16px;
+            color: #1d1d1f;
+            max-width: 1080px;
+        }
+        
+        h2 {
+            font-size: 40px;
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.003em;
+            margin-bottom: 60px;
+            color: #1d1d1f;
+            max-width: 960px;
+        }
+        
+        .subtitle {
+            font-size: 21px;
+            line-height: 1.381;
+            font-weight: 400;
+            color: #86868b;
+            max-width: 720px;
+            margin: 0 auto 40px;
+        }
+        
+        .key-point {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 24px;
+            line-height: 1.2;
+        }
+        
+        .emoji {
+            font-size: 80px;
+            margin-bottom: 32px;
+            display: block;
+        }
+        
+        .emoji-small {
+            font-size: 48px;
+            margin-bottom: 24px;
+            display: block;
+        }
+        
+        ul {
+            list-style: none;
+            max-width: 720px;
+            margin: 0 auto;
+            text-align: left;
+        }
+        
+        li {
+            font-size: 17px;
+            line-height: 1.47059;
+            margin-bottom: 16px;
+            color: #1d1d1f;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        li::before {
+            content: "•";
+            color: #007aff;
+            font-weight: 600;
+            font-size: 20px;
+            flex-shrink: 0;
+            margin-top: -2px;
+        }
+        
+        .workflow-list li {
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+        
+        .workflow-highlight {
+            font-weight: 700;
+            color: #1d1d1f;
+        }
+        
+        .large-number {
+            font-size: 72px;
+            font-weight: 800;
+            color: #007aff;
+            line-height: 1;
+            margin-bottom: 16px;
+        }
+        
+        .number-label {
+            font-size: 19px;
+            color: #86868b;
+            font-weight: 400;
+            margin-bottom: 32px;
+        }
+        
+        .metrics-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+            max-width: 960px;
+            margin: 0 auto;
+        }
+        
+        .metric {
+            text-align: center;
+            min-width: 160px;
+        }
+        
+        .metric-number {
+            font-size: 48px;
+            font-weight: 700;
+            color: #1d1d1f;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+        
+        .metric-label {
+            font-size: 15px;
+            color: #86868b;
+            line-height: 1.4;
+        }
+        
+        .contact-info {
+            margin-top: 40px;
+        }
+        
+        .bot-handle {
+            font-size: 28px;
+            font-weight: 600;
+            color: #007aff;
+            margin-bottom: 16px;
+        }
+        
+        .website {
+            font-size: 19px;
+            color: #86868b;
+        }
+        
+        .website a {
+            color: #007aff;
+            text-decoration: none;
+        }
+        
+        .slide-number {
+            position: absolute;
+            bottom: 22px;
+            right: 22px;
+            font-size: 12px;
+            color: #86868b;
+            font-weight: 400;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 40px;
+            }
+            
+            h2 {
+                font-size: 32px;
+                margin-bottom: 40px;
+            }
+            
+            .subtitle {
+                font-size: 19px;
+            }
+            
+            .large-number {
+                font-size: 56px;
+            }
+            
+            .key-point {
+                font-size: 24px;
+            }
+            
+            .metrics-container {
+                gap: 32px;
+            }
+            
+            .metric-number {
+                font-size: 40px;
+            }
+        }
+        
+        @media print {
+            .slide {
+                page-break-after: always;
+                min-height: 100vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+        
+        <!-- Slide 1: One-liner -->
+        <div class="slide title">
+            <div class="emoji">🏃‍♂️</div>
+            <h1>Running coach that's always with&nbsp;you</h1>
+            <p class="subtitle">Personalized plans, constant support and guaranteed results in&nbsp;a&nbsp;convenient Telegram bot</p>
+            <div class="contact-info" style="margin-top: 40px;">
+                <div class="bot-handle">@runtrener_bot</div>
+                <div class="website"><a href="https://runtrener.ru/en/">runtrener.ru</a></div>
+            </div>
+            <div class="slide-number">1</div>
+        </div>
+
+        <!-- Slide 2: Overall -->
+        <div class="slide">
+            <div class="emoji-small">⚡</div>
+            <h2>Overall for 56&nbsp;days</h2>
+            <div class="metrics-container">
+                <div class="metric">
+                    <div class="metric-number">₽40k</div>
+                    <div class="metric-label">Revenue</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-number">₽80k</div>
+                    <div class="metric-label">Spent</div>
+                </div>
+            </div>
+            <div class="key-point" style="margin-top: 40px;">Cost breakdown:</div>
+            <p class="subtitle">50%&nbsp;/&nbsp;50%&nbsp;— marketing / services (chatGPT&nbsp;+&nbsp;n8n)</p>
+            <div class="slide-number">2</div>
+        </div>
+
+        <!-- Slide 3: Problem -->
+        <div class="slide">
+            <div class="emoji-small">😰</div>
+            <h2>Problem</h2>
+            <p class="subtitle">You want to start sports. Running seems simple, but when you dive in, you realize there are tons of details, and it's unclear how to&nbsp;do&nbsp;it&nbsp;right.</p>
+            <p class="subtitle">Then you start running, but you're not sure you're doing it correctly. As&nbsp;a&nbsp;result, your motivation drops, and you quit.</p>
+            <div class="key-point">But there are human trainers:</div>
+            <ul>
+                <li>Expensive for most people and not always quality work</li>
+                <li>People lack feedback and support</li>
+                <li>They're not always available</li>
+                <li>Narrow specialization, may not provide nutrition and rehabilitation plans</li>
+            </ul>
+            <div class="slide-number">3</div>
+        </div>
+
+        <!-- Slide 4: Solution - Purpose -->
+        <div class="slide">
+            <div class="emoji-small">💡</div>
+            <h2>Solution</h2>
+            <div class="key-point">Purpose</div>
+            <p class="subtitle">Create a&nbsp;personal running coach to&nbsp;help people achieve results: run the&nbsp;needed distance, develop a&nbsp;healthy habit, lose weight.</p>
+            <div class="slide-number">4</div>
+        </div>
+
+        <!-- Slide 5: Vision -->
+        <div class="slide">
+            <div class="emoji-small">🎯</div>
+            <h2>Vision of&nbsp;result</h2>
+            <p class="subtitle">Your personal trainer who is&nbsp;as&nbsp;close to&nbsp;you as&nbsp;possible. You can message them any time day or&nbsp;night, ask for advice or&nbsp;ask any question.</p>
+            <p class="subtitle">The trainer learns about your goals and creates a&nbsp;plan to&nbsp;achieve them. They will monitor your plan execution, adjust it&nbsp;based on&nbsp;your real results and, if&nbsp;you want, push you.</p>
+            <div class="slide-number">5</div>
+        </div>
+
+        <!-- Slide 6: How it works -->
+        <div class="slide">
+            <div class="emoji-small">⚙️</div>
+            <h2>How it&nbsp;works</h2>
+            <ul class="workflow-list">
+                <li>User describes goal&nbsp;→ bot builds weekly/cycle plan</li>
+                <li>After run: sends Strava/Garmin screenshot&nbsp;→ bot analyzes and gives voice feedback</li>
+                <li>Supports, gives running recommendations and adjusts plans in&nbsp;real time</li>
+                <li>Interaction interface&nbsp;→ familiar (like with human trainer), even voice messages</li>
+            </ul>
+            <div class="slide-number">6</div>
+        </div>
+
+        <!-- Slide 7: Metrics -->
+        <div class="slide">
+            <div class="emoji-small">📈</div>
+            <h2>Metrics</h2>
+            <div class="key-point">Since 17.07&nbsp;— 56&nbsp;days since launch</div>
+            <div class="metrics-container">
+                <div class="metric">
+                    <div class="metric-number">1786</div>
+                    <div class="metric-label">Total users</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-number">1145</div>
+                    <div class="metric-label">Active base</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-number">634</div>
+                    <div class="metric-label">Blocked us</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-number">60</div>
+                    <div class="metric-label">Bought PRO subscription</div>
+                </div>
+            </div>
+            <div class="large-number" style="font-size: 48px; margin-top: 24px;">40.6%</div>
+            <div class="number-label">NPS: 66.5%&nbsp;—&nbsp;25.9%&nbsp;= 40.6% (300&nbsp;→ 170)</div>
+            <div class="slide-number">7</div>
+        </div>
+
+        <!-- Slide 8: Retention -->
+        <div class="slide">
+            <div class="emoji-small">📊</div>
+            <h2>Retention (weighted)</h2>
+            <div class="metrics-container">
+                <div class="metric">
+                    <div class="metric-number">15.01</div>
+                    <div class="metric-label">D1</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-number">8.01</div>
+                    <div class="metric-label">D7</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-number">5.32</div>
+                    <div class="metric-label">D14</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-number">1.9</div>
+                    <div class="metric-label">D30</div>
+                </div>
+            </div>
+            <div class="slide-number">8</div>
+        </div>
+
+        <!-- Slide 9: Market -->
+        <div class="slide">
+            <div class="emoji-small">🌍</div>
+            <h2>Market overview</h2>
+            <div class="large-number">800k - 7.5M</div>
+            <div class="number-label">Runners in&nbsp;Russia</div>
+            <div class="large-number" style="margin-top: 32px;">26M</div>
+            <div class="number-label">Surveys say 18% of&nbsp;Russians run</div>
+            <p class="subtitle" style="margin-top: 32px;">Training plan costs ₽900-4000 per&nbsp;month<br>(personal trainer ~₽10-12k)</p>
+            <div class="slide-number">9</div>
+        </div>
+
+        <!-- Slide 10: Pricing -->
+        <div class="slide">
+            <div class="emoji-small">💰</div>
+            <h2>Subscription pricing</h2>
+            <div class="metrics-container">
+                <div class="metric">
+                    <div class="metric-number">₽390</div>
+                    <div class="metric-label">1 month</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-number">₽790</div>
+                    <div class="metric-label">3 months</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-number">₽1290</div>
+                    <div class="metric-label">1 year</div>
+                </div>
+            </div>
+            <div class="key-point" style="margin-top: 32px;">Bot costs from&nbsp;₽110 per&nbsp;month</div>
+            <p class="subtitle">For comparison: energy gel costs ₽300 (for 40&nbsp;min workout)<br>Cup of&nbsp;coffee&nbsp;— well, you know…</p>
+            <div class="slide-number">10</div>
+        </div>
+
+        <!-- Slide 11: Demo -->
+        <div class="slide final">
+            <div class="emoji">🚀</div>
+            <h1>Demo</h1>
+            <p class="subtitle">Let's see what's inside</p>
+            <div class="contact-info" style="margin-top: 60px;">
+                <div class="bot-handle">@runtrener_bot</div>
+                <div class="website"><a href="https://runtrener.ru/en/">runtrener.ru</a></div>
+            </div>
+            <div class="slide-number">11</div>
+        </div>
+
+    </div>
+
+    <script>
+        // Simple keyboard navigation
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                if (currentSlide < slides.length - 1) {
+                    currentSlide++;
+                    slides[currentSlide].scrollIntoView({ behavior: 'smooth' });
+                }
+            } else if (e.key === 'ArrowLeft') {
+                if (currentSlide > 0) {
+                    currentSlide--;
+                    slides[currentSlide].scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        });
+    </script>
+</body>
+</html>

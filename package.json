@@ -1,0 +1,19 @@
+{
+  "name": "running-coach-landing",
+  "version": "1.0.0",
+  "description": "Running coach landing page with optimization tools",
+  "scripts": {
+    "build:css": "cleancss -o css/main.min.css css/main.css && cleancss -o css/main-en.min.css css/main-en.css",
+    "build:js": "uglifyjs js/stats.js js/testimonials.js js/demo.js js/main.js -o js/main.min.js && uglifyjs js/stats-en.js js/testimonials-en.js js/demo-en.js js/main-en.js -o js/main-en.min.js",
+    "minify": "npm run build:css && npm run build:js",
+    "gzip": "gzip -k -9 css/*.min.css js/*.min.js",
+    "build": "npm run minify && npm run gzip"
+  },
+  "devDependencies": {
+    "clean-css-cli": "^5.6.3",
+    "uglify-js": "^3.19.3"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

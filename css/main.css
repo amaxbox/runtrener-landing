@@ -1,0 +1,661 @@
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.47059;
+            color: #1d1d1f;
+            background: #ffffff;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 22px;
+        }
+
+        header {
+            background: rgba(251, 251, 253, 0.8);
+            backdrop-filter: saturate(180%) blur(20px);
+            padding: 12px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 21px;
+            font-weight: 600;
+            color: #1d1d1f;
+            letter-spacing: -0.022em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 21px;
+            object-fit: cover;
+        }
+
+        .developer-link {
+            color: #007aff;
+            text-decoration: none;
+            font-size: 16px;
+            line-height: 1.47059;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .developer-link:hover {
+            text-decoration: underline;
+        }
+
+        .header-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .tip-link {
+            color: #007aff;
+            text-decoration: none;
+            font-size: 16px;
+            line-height: 1.47059;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tip-link:hover {
+            text-decoration: underline;
+        }
+
+        .developer-icon,
+        .tip-icon {
+            font-size: 32px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 120px 0 76px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            width: 100%;
+        }
+
+        .hero h1 {
+            font-size: 56px;
+            font-weight: 700;
+            line-height: 1.07143;
+            letter-spacing: -0.005em;
+            margin-bottom: 16px;
+            color: #1d1d1f;
+        }
+
+        .hero p {
+            font-size: 21px;
+            line-height: 1.381;
+            font-weight: 400;
+            margin-bottom: 40px;
+            color: #86868b;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 40px;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #007aff;
+            color: white;
+            padding: 12px 32px;
+            text-decoration: none;
+            border-radius: 980px;
+            font-size: 17px;
+            font-weight: 400;
+            transition: all 0.15s ease;
+            min-width: 110px;
+            text-align: center;
+            justify-content: center;
+            height: 46px;
+            box-sizing: border-box;
+        }
+
+        .telegram-icon {
+            width: 24px;
+            height: 24px;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .cta-button:hover {
+            background: #0056cc;
+            transform: translateY(-1px);
+        }
+
+        .hero .stats-info {
+            font-size: 14px;
+            color: #1d1d1f !important;
+            margin-top: 12px;
+            margin-bottom: 0;
+            font-weight: 400;
+            line-height: 1.4;
+            max-width: none;
+        }
+
+        .features {
+            background: #ffffff;
+            padding: 100px 0;
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 40px;
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.003em;
+            margin-bottom: 60px;
+            color: #1d1d1f;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .feature-card {
+            background: #f5f5f7;
+            padding: 24px 20px;
+            border-radius: 16px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .feature-card h3 {
+            font-size: 20px;
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: 12px;
+            color: #1d1d1f;
+        }
+
+        .feature-card p {
+            color: #86868b;
+            line-height: 1.4;
+            font-size: 15px;
+            font-weight: 400;
+        }
+
+        .coming-soon {
+            position: relative;
+        }
+
+        .coming-soon::after {
+            content: 'скоро';
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #007aff;
+            color: white;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 4px 8px;
+            border-radius: 12px;
+            text-transform: lowercase;
+        }
+
+        .testimonials {
+            background: #ffffff;
+            padding: 80px 0;
+        }
+
+        .testimonials h2 {
+            text-align: center;
+            font-size: 40px;
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.003em;
+            margin-bottom: 60px;
+            color: #1d1d1f;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 32px;
+            max-width: 1200px;
+            margin: 0 auto;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .testimonial-card {
+            background: #f5f5f7;
+            padding: 32px;
+            border-radius: 18px;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            position: relative;
+        }
+
+        .testimonial-quote {
+            font-size: 17px;
+            line-height: 1.47059;
+            color: #1d1d1f;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            font-size: 15px;
+            font-weight: 600;
+            color: #007aff;
+        }
+
+        .testimonial-card::before {
+            content: '"';
+            position: absolute;
+            top: 16px;
+            left: 24px;
+            font-size: 48px;
+            color: #007aff;
+            opacity: 0.3;
+            font-family: Georgia, serif;
+        }
+
+        .cta-section {
+            background: #f5f5f7;
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 40px;
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.003em;
+            margin-bottom: 16px;
+            color: #1d1d1f;
+        }
+
+        .cta-section p {
+            font-size: 21px;
+            line-height: 1.381;
+            font-weight: 400;
+            margin-bottom: 40px;
+            color: #86868b;
+        }
+
+        footer {
+            background: #f5f5f7;
+            color: #86868b;
+            text-align: center;
+            padding: 40px 0;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        footer p {
+            font-size: 12px;
+            line-height: 1.33337;
+            font-weight: 400;
+            margin-bottom: 10px;
+        }
+
+        .language-switch {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 10px;
+        }
+
+        .language-switch a {
+            color: #007aff;
+            text-decoration: none;
+            font-size: 14px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .language-switch a:hover {
+            background-color: rgba(0, 122, 255, 0.1);
+        }
+
+        .language-switch a.active {
+            background-color: #007aff;
+            color: white;
+        }
+
+        /* Стили для секции "Как работает тренер" */
+        .how-it-works {
+            background: #ffffff;
+            padding: 100px 0;
+        }
+
+        .how-it-works h2 {
+            text-align: center;
+            font-size: 40px;
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.003em;
+            margin-bottom: 16px;
+            color: #1d1d1f;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 21px;
+            line-height: 1.381;
+            font-weight: 400;
+            margin-bottom: 60px;
+            color: #86868b;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 60px;
+        }
+
+        .demo-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .chat-messages {
+            padding: 20px;
+            height: 400px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            gap: 20px;
+            position: relative;
+            background: #f5f5f7;
+            border-radius: 20px;
+        }
+
+        .message {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            animation: messageAppear 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            font-size: 20px;
+            width: 32px;
+            height: 32px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .message.bot .message-avatar {
+            background: #007aff;
+            color: white;
+        }
+
+        .message.user .message-avatar {
+            background: #34c759;
+            color: white;
+        }
+
+        .message-content {
+            max-width: 75%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 15px;
+            line-height: 1.4;
+            position: relative;
+        }
+
+        .message.bot .message-content {
+            background: #ffffff;
+            color: #1d1d1f;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .message.user .message-content {
+            background: #007aff;
+            color: white;
+        }
+
+        .message-time {
+            font-size: 12px;
+            opacity: 0.6;
+            margin-top: 4px;
+            text-align: right;
+        }
+
+        .message.user .message-time {
+            text-align: left;
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: #ffffff;
+            border-radius: 18px;
+            max-width: 75%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #86868b;
+            animation: typingPulse 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typingPulse {
+            0%, 60%, 100% { opacity: 0.3; }
+            30% { opacity: 1; }
+        }
+
+        @keyframes messageAppear {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes messageDisappear {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-30px) scale(0.95);
+            }
+        }
+
+        /* Стили для особенностей тренера */
+        .coach-features {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .coach-features .feature-icon {
+            font-size: 32px;
+            width: 56px;
+            height: 56px;
+            background: #f5f5f7;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .feature-content h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1d1d1f;
+            line-height: 1.2;
+        }
+
+        .feature-content p {
+            font-size: 15px;
+            line-height: 1.4;
+            color: #86868b;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 40px;
+            }
+            
+            .hero p {
+                font-size: 19px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 0 16px;
+            }
+
+            .logo {
+                font-size: 20px;
+            }
+
+            .logo-avatar {
+                width: 40px;
+                height: 40px;
+                border-radius: 20px;
+            }
+
+
+            .developer-link {
+                font-size: 16px;
+            }
+
+            .developer-link-text {
+                display: none;
+            }
+
+            .tip-link {
+                font-size: 16px;
+            }
+
+            .tip-link-text {
+                display: none;
+            }
+
+            .developer-icon,
+            .tip-icon {
+                font-size: 32px;
+            }
+
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .testimonial-card {
+                padding: 24px;
+            }
+
+            .chat-messages {
+                padding: 16px;
+                height: 350px;
+            }
+
+            .coach-features {
+                gap: 16px;
+                margin-top: 24px;
+            }
+
+            .feature-item {
+                padding: 16px;
+                gap: 12px;
+            }
+
+            .coach-features .feature-icon {
+                width: 48px;
+                height: 48px;
+                font-size: 24px;
+            }
+
+            .feature-content h4 {
+                font-size: 16px;
+                margin-bottom: 6px;
+            }
+
+            .feature-content p {
+                font-size: 14px;
+            }
+
+        }

@@ -6,24 +6,44 @@
 
 ```
 running-coach-landing/
-├── index.html              # Основная страница лендинга
-├── grafana-proxy/           # Backend прокси для Grafana
-│   ├── app.py              # Flask приложение
-│   ├── requirements.txt     # Python зависимости
-│   ├── Dockerfile          # Docker образ
-│   ├── docker-compose.yml  # Docker Compose конфигурация
-│   └── deploy.sh           # Скрипт деплоя
-└── README.md               # Этот файл
+├── index.html              # Русская версия лендинга
+├── index-en.html           # Английская версия лендинга
+├── js/
+│   ├── url-params.js       # Обработка URL параметров
+│   ├── stats.js           # Статистика (RU)
+│   ├── stats-en.js        # Статистика (EN)
+│   └── ...                # Другие JS файлы
+├── css/
+│   ├── main.css           # Стили (RU)
+│   ├── main-en.css        # Стили (EN)
+│   └── ...
+├── grafana-proxy/         # Backend прокси для Grafana
+│   ├── app.py            # Flask приложение
+│   ├── requirements.txt   # Python зависимости
+│   ├── Dockerfile        # Docker образ
+│   ├── docker-compose.yml # Docker Compose конфигурация
+│   └── deploy.sh         # Скрипт деплоя
+├── URL_PARAMETERS.md      # Документация по URL параметрам
+└── README.md             # Этот файл
 ```
 
 ## Функциональность
 
-### Лендинг (index.html)
+### Лендинг (index.html & index-en.html)
 - ✅ Адаптивный дизайн в стиле Apple
-- ✅ Секции: Hero, Возможности, Роадмап, CTA
+- ✅ Двуязычная поддержка (русский/английский)
+- ✅ Секции: Hero, Возможности, Отзывы, CTA
 - ✅ Интеграция с Grafana для отображения статистики
 - ✅ Автообновление данных каждые 5 минут
 - ✅ Fallback значения при недоступности API
+- ✅ **Автоматическая передача URL параметров в Telegram бот**
+
+### URL Parameters Feature (js/url-params.js)
+- ✅ Автоматическая передача всех URL параметров в Telegram бот
+- ✅ Приоритет для существующего параметра `start`
+- ✅ Дефолтные значения по языку (`landru`/`landeng`)
+- ✅ Поддержка маркетинговых кампаний и реферальных ссылок
+- ✅ Тихая работа без отладочных сообщений
 
 ### Grafana Proxy (grafana-proxy/)
 - ✅ Flask API для обхода CORS ограничений
@@ -110,6 +130,11 @@ curl http://89.110.65.155:8083/api/stats
 
 # Отладочная информация
 curl http://89.110.65.155:8083/api/debug
+
+# Тестирование URL параметров
+# Откройте в браузере и проверьте кнопки:
+https://runtrener.ru/?utm_source=test&utm_campaign=docs
+https://runtrener.ru/en/?start=welcome_bonus
 ```
 
 ## Структура данных Grafana
@@ -169,3 +194,7 @@ ports:
 - **v1.0** - Базовый лендинг со статичными данными
 - **v1.1** - Добавлена интеграция с Grafana через прокси
 - **v1.2** - Улучшен дизайн и добавлены fallback значения
+- **v2.0** - Двуязычная поддержка (RU/EN)
+- **v2.1** - Автоматическая передача URL параметров в Telegram бот
+- **v2.2** - Переупорядочены фичи (Plan тренировок на первое место)
+- **v2.3** - Удалены отладочные console.log из URL parameters скрипта
