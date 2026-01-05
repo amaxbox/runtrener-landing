@@ -1,0 +1,37 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: telegram-detailed
+  group_by: ['alertname']
+  group_wait: 30s
+  group_interval: 1h
+  repeat_interval: 4h
+  routes:
+    - receiver: telegram-heartbeat
+      matchers:
+        - severity="info"
+      group_wait: 0s
+      group_interval: 2h
+      repeat_interval: 2h
+      continue: false
+
+receivers:
+  - name: telegram-heartbeat
+    telegram_configs:
+      - api_url: https://api.telegram.org
+        bot_token: 8276827994:AAHmxuJNJs4kBZW_y-mKY38STiqna02txrc
+        chat_id: -4982304484
+        parse_mode: HTML
+        message: '{{ template "telegram.heartbeat" . }}'
+        send_resolved: false
+  - name: telegram-detailed
+    telegram_configs:
+      - api_url: https://api.telegram.org
+        bot_token: 8276827994:AAHmxuJNJs4kBZW_y-mKY38STiqna02txrc
+        chat_id: -4982304484
+        parse_mode: HTML
+        message: '{{ template "telegram.detailed" . }}'
+
+templates:
+  - /etc/alertmanager/templates/*.tmpl

@@ -1,0 +1,61 @@
+groups:
+  - name: n8n_recording_rules
+    rules:
+      # Подсчет запущенных воркеров через cAdvisor
+      - record: n8n:workers_up
+        expr: count(container_cpu_usage_seconds_total{name=~"n8n-n8n-worker-.*"})
+      - record: n8n:main_up
+        expr: sum(up{job="n8n",instance=~".*main.*"})
+      - record: n8n:public_probe_success
+        expr: avg(probe_success{job="blackbox_http_public"})
+      - record: n8n:http_internal_success
+        expr: avg(probe_success{job="blackbox_http"})
+      - record: node:load1_avg
+        expr: avg(node_load1)
+      - record: node:cpu_utilization_5m
+        expr: avg(rate(node_cpu_seconds_total{mode!="idle"}[5m]))
+
+  - name: n8n_alerts
+    rules:
+      - alert: N8NHeartbeat
+        expr: n8n:main_up == 1 and n8n:public_probe_success == 1
+        labels:
+          severity: info
+        annotations:
+          summary: "n8n доступен"
+          description: "Основной инстанс и публичный endpoint отвечают."
+          cpu: '{{ with query "node:cpu_utilization_5m" }}{{ if gt (len .) 0 }}{{ humanizePercentage (index . 0).Value }}{{ else }}н/д{{ end }}{{ end }}'
+          load: '{{ with query "node:load1_avg" }}{{ if gt (len .) 0 }}{{ printf "%.2f" (index . 0).Value }}{{ else }}н/д{{ end }}{{ end }}'
+          workers: '{{ with query "n8n:workers_up" }}{{ if gt (len .) 0 }}{{ printf "%.0f" (index . 0).Value }}{{ else }}н/д{{ end }}{{ end }}'
+      - alert: N8NMainInstanceDown
+        expr: n8n:main_up < 1
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "n8n основной инстанс недоступен"
+          description: "Целевая метрика up() для n8n-main = 0"
+      - alert: N8NPublicEndpointDown
+        expr: n8n:public_probe_success < 1
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Публичный endpoint n8n не отвечает"
+          description: "Blackbox-пробник возвращает ошибку для внешнего хоста n8n."
+      - alert: N8NNodeHighCpu
+        expr: node:cpu_utilization_5m > 0.8
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Высокая загрузка CPU на сервере n8n"
+          description: "Средняя утилизация CPU за 5 мин превысила 80%."
+      - alert: N8NEventLoopLagHigh
+        expr: max(n8n_nodejs_eventloop_lag_seconds{instance=~".*main.*"}) > 0.5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Высокая задержка event loop"
+          description: "Показатель event loop lag превысил 0.5 секунды."

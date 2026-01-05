@@ -1,0 +1,169 @@
+services:
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_POSTGRESDB_USER}
+      POSTGRES_PASSWORD: ${DB_POSTGRESDB_PASSWORD}
+      POSTGRES_DB: ${DB_POSTGRESDB_DATABASE}
+    volumes:
+      - ./db:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    restart: unless-stopped
+
+  n8n-main:
+    image: n8n-yc:2.0.3-moy-nalog
+    command: start
+    restart: unless-stopped
+    depends_on: [postgres, redis]
+    environment:
+      - DB_TYPE=${DB_TYPE}
+      - DB_POSTGRESDB_HOST=${DB_POSTGRESDB_HOST}
+      - DB_POSTGRESDB_PORT=${DB_POSTGRESDB_PORT}
+      - DB_POSTGRESDB_DATABASE=${DB_POSTGRESDB_DATABASE}
+      - DB_POSTGRESDB_USER=${DB_POSTGRESDB_USER}
+      - DB_POSTGRESDB_PASSWORD=${DB_POSTGRESDB_PASSWORD}
+      - N8N_HOST=${N8N_HOST}
+      - N8N_PORT=${N8N_PORT}
+      - N8N_PROTOCOL=${N8N_PROTOCOL}
+      - WEBHOOK_URL=${WEBHOOK_URL}
+      - N8N_EDITOR_BASE_URL=${N8N_EDITOR_BASE_URL}
+      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
+      - N8N_BASIC_AUTH_ACTIVE=${N8N_BASIC_AUTH_ACTIVE}
+      - N8N_BASIC_AUTH_USER=${N8N_BASIC_AUTH_USER}
+      - N8N_BASIC_AUTH_PASSWORD=${N8N_BASIC_AUTH_PASSWORD}
+      - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
+      - EXECUTIONS_MODE=${EXECUTIONS_MODE}
+      - EXECUTIONS_DATA_SAVE_ON_SUCCESS=${EXECUTIONS_DATA_SAVE_ON_SUCCESS}
+      - EXECUTIONS_DATA_SAVE_ON_ERROR=${EXECUTIONS_DATA_SAVE_ON_ERROR}
+      - EXECUTIONS_DATA_PRUNE=${EXECUTIONS_DATA_PRUNE}
+      - EXECUTIONS_DATA_MAX_AGE=${EXECUTIONS_DATA_MAX_AGE}
+      - EXECUTIONS_DATA_PRUNE_MAX_COUNT=${EXECUTIONS_DATA_PRUNE_MAX_COUNT}
+      - QUEUE_BULL_REDIS_HOST=redis
+      - NODE_OPTIONS=${NODE_OPTIONS}
+      - N8N_METRICS=true           # включает /metrics
+      - TZ=Europe/Moscow
+      - N8N_DEFAULT_TIMEZONE=Europe/Moscow
+      - OFFLOAD_MANUAL_EXECUTIONS_TO_WORKERS=true  # разгрузка main instance
+      - N8N_BLOCK_ENV_ACCESS_IN_NODE=true          # security hardening
+      - NODE_FUNCTION_ALLOW_EXTERNAL=moy-nalog     # разрешить использование внешних пакетов
+    volumes:
+      - ./data:/home/node/.n8n
+    ports:
+      - "127.0.0.1:5678:5678"   # для nginx-прокси
+    networks: [web, default]
+
+  n8n-worker:
+    image: n8n-yc:2.0.3-moy-nalog
+    command: worker
+    restart: unless-stopped
+    depends_on: [postgres, redis]
+    environment:
+      - DB_TYPE=${DB_TYPE}
+      - DB_POSTGRESDB_HOST=${DB_POSTGRESDB_HOST}
+      - DB_POSTGRESDB_PORT=${DB_POSTGRESDB_PORT}
+      - DB_POSTGRESDB_DATABASE=${DB_POSTGRESDB_DATABASE}
+      - DB_POSTGRESDB_USER=${DB_POSTGRESDB_USER}
+      - DB_POSTGRESDB_PASSWORD=${DB_POSTGRESDB_PASSWORD}
+      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
+      - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
+      - EXECUTIONS_MODE=${EXECUTIONS_MODE}
+      - EXECUTIONS_DATA_PRUNE=${EXECUTIONS_DATA_PRUNE}
+      - EXECUTIONS_DATA_MAX_AGE=${EXECUTIONS_DATA_MAX_AGE}
+      - EXECUTIONS_DATA_PRUNE_MAX_COUNT=${EXECUTIONS_DATA_PRUNE_MAX_COUNT}
+      - QUEUE_BULL_REDIS_HOST=redis
+      - NODE_OPTIONS=${NODE_OPTIONS}
+      - N8N_METRICS=true
+      - NODE_FUNCTION_ALLOW_EXTERNAL=moy-nalog     # разрешить использование внешних пакетов
+
+  # --- Monitoring stack ---
+  prometheus:
+    image: prom/prometheus:latest
+    restart: unless-stopped
+    depends_on: [alertmanager]
+    volumes:
+      - /opt/n8n/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - /opt/n8n/monitoring/prom_data:/prometheus
+      - /opt/n8n/monitoring/targets:/etc/prometheus/targets:ro
+      - /opt/n8n/monitoring/rules:/etc/prometheus/rules:ro
+    expose:
+      - "9090"        # доступ только внутри docker-сети
+    # extra_hosts:    # не нужно, если используем 172.17.0.1
+    #   - "host.docker.internal:host-gateway"
+
+
+  grafana:
+    image: grafana/grafana:latest
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+    volumes:
+      - /opt/n8n/monitoring/grafana:/var/lib/grafana
+      - /opt/n8n/monitoring/provisioning:/etc/grafana/provisioning
+    ports:
+      - "3000:3000"
+    depends_on: [prometheus]
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    restart: unless-stopped
+    pid: "host"
+    network_mode: "host"
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+
+  postgres-exporter:
+    image: quay.io/prometheuscommunity/postgres-exporter:latest
+    restart: unless-stopped
+    environment:
+      - DATA_SOURCE_NAME=postgresql://n8n:${DB_POSTGRESDB_PASSWORD}@postgres:5432/n8n?sslmode=disable
+    ports:
+      - "9187:9187"
+    depends_on: [postgres]
+
+  redis-exporter:
+    image: oliver006/redis_exporter:latest
+    restart: unless-stopped
+    environment:
+      - REDIS_ADDR=redis:6379
+    ports:
+      - "9121:9121"
+    depends_on: [redis]
+
+  blackbox:
+    image: prom/blackbox-exporter:latest
+    restart: unless-stopped
+    ports:
+      - "9115:9115"
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    restart: unless-stopped
+    environment:
+      - ALERTMANAGER_TELEGRAM_BOT_TOKEN=${ALERTMANAGER_TELEGRAM_BOT_TOKEN}
+      - ALERTMANAGER_TELEGRAM_CHAT_ID=${ALERTMANAGER_TELEGRAM_CHAT_ID}
+    volumes:
+      - /opt/n8n/monitoring/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+      - /opt/n8n/monitoring/alertmanager/templates:/etc/alertmanager/templates:ro
+      - /opt/n8n/monitoring/alertmanager/data:/alertmanager
+    command:
+      - --config.file=/etc/alertmanager/alertmanager.yml
+      - --storage.path=/alertmanager
+      - --log.level=debug
+    expose:
+      - "9093"
+
+networks:
+  web: {}

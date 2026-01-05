@@ -1,0 +1,38 @@
+{{ define "telegram.heartbeat" }}
+{{- $alert := (index .Alerts 0) -}}
+✅ <b>n8n в порядке</b>
+Основной инстанс, публичный endpoint и воркеры отвечают.
+{{- if $alert }}
+  {{- if $alert.Annotations.workers }}
+Воркеры: {{ $alert.Annotations.workers }}
+  {{- end }}
+  {{- if $alert.Annotations.load }}
+Load1: {{ $alert.Annotations.load }}
+  {{- end }}
+  {{- if $alert.Annotations.cpu }}
+CPU: {{ $alert.Annotations.cpu }}
+  {{- end }}
+{{- end }}
+{{ end }}
+
+{{ define "telegram.detailed" }}
+{{- if gt (len .Alerts.Firing) 0 }}
+{{- $title := "" -}}
+{{- if .CommonAnnotations.summary }}
+{{- $title = .CommonAnnotations.summary -}}
+{{- else if .CommonLabels.alertname }}
+{{- $title = .CommonLabels.alertname -}}
+{{- end }}
+🚨 <b>{{ $title }}</b>
+{{- range .Alerts.Firing }}
+{{- $severity := .Labels.severity }}
+{{- if not $severity }}{{- $severity = "unknown" }}{{- end }}
+{{- $desc := .Annotations.description }}
+{{- if not $desc }}{{- $desc = "Без описания" }}{{- end }}
+• <b>{{ $severity }}</b>: {{ $desc }}
+  Источник: {{ if .Labels.instance }}{{ .Labels.instance }}{{ else if .Labels.job }}{{ .Labels.job }}{{ else if .Labels.alertname }}{{ .Labels.alertname }}{{ else }}неизвестен{{ end }}
+{{- end }}
+{{- else if gt (len .Alerts.Resolved) 0 }}
+✅ <b>{{ if .CommonAnnotations.summary }}{{ .CommonAnnotations.summary }}{{ else }}{{ .CommonLabels.alertname }}{{ end }}</b> восстановлен.
+{{- end }}
+{{ end }}
