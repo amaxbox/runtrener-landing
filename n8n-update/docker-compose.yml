@@ -2,6 +2,12 @@ services:
   postgres:
     image: postgres:16
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+        reservations:
+          memory: 256M
     environment:
       POSTGRES_USER: ${DB_POSTGRESDB_USER}
       POSTGRES_PASSWORD: ${DB_POSTGRESDB_PASSWORD}
@@ -12,12 +18,24 @@ services:
   redis:
     image: redis:7
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+        reservations:
+          memory: 64M
 
   n8n-main:
-    image: n8n-yc:2.0.3-moy-nalog
+    image: n8n-yc:2.4.0-moy-nalog
     command: start
     restart: unless-stopped
     depends_on: [postgres, redis]
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+        reservations:
+          memory: 384M
     environment:
       - DB_TYPE=${DB_TYPE}
       - DB_POSTGRESDB_HOST=${DB_POSTGRESDB_HOST}
@@ -36,6 +54,7 @@ services:
       - N8N_BASIC_AUTH_PASSWORD=${N8N_BASIC_AUTH_PASSWORD}
       - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
       - EXECUTIONS_MODE=${EXECUTIONS_MODE}
+      - EXECUTIONS_PROCESS=main
       - EXECUTIONS_DATA_SAVE_ON_SUCCESS=${EXECUTIONS_DATA_SAVE_ON_SUCCESS}
       - EXECUTIONS_DATA_SAVE_ON_ERROR=${EXECUTIONS_DATA_SAVE_ON_ERROR}
       - EXECUTIONS_DATA_PRUNE=${EXECUTIONS_DATA_PRUNE}
@@ -48,7 +67,9 @@ services:
       - N8N_DEFAULT_TIMEZONE=Europe/Moscow
       - OFFLOAD_MANUAL_EXECUTIONS_TO_WORKERS=true  # разгрузка main instance
       - N8N_BLOCK_ENV_ACCESS_IN_NODE=true          # security hardening
-      - NODE_FUNCTION_ALLOW_EXTERNAL=moy-nalog     # разрешить использование внешних пакетов
+      - NODE_FUNCTION_ALLOW_EXTERNAL=moy-nalog,undici     # разрешить использование внешних пакетов
+      - MOY_NALOG_PROXY=http://51.250.1.144:8888  # прокси только для МойНалог API
+      - N8N_RUNNERS_DISABLED=true                  # отключить Task Runner для доступа к сети
     volumes:
       - ./data:/home/node/.n8n
     ports:
@@ -56,10 +77,17 @@ services:
     networks: [web, default]
 
   n8n-worker:
-    image: n8n-yc:2.0.3-moy-nalog
+    image: n8n-yc:2.4.0-moy-nalog
     command: worker
     restart: unless-stopped
     depends_on: [postgres, redis]
+    deploy:
+      replicas: 3
+      resources:
+        limits:
+          memory: 896M
+        reservations:
+          memory: 384M
     environment:
       - DB_TYPE=${DB_TYPE}
       - DB_POSTGRESDB_HOST=${DB_POSTGRESDB_HOST}
@@ -76,13 +104,29 @@ services:
       - QUEUE_BULL_REDIS_HOST=redis
       - NODE_OPTIONS=${NODE_OPTIONS}
       - N8N_METRICS=true
-      - NODE_FUNCTION_ALLOW_EXTERNAL=moy-nalog     # разрешить использование внешних пакетов
+      - NODE_FUNCTION_ALLOW_EXTERNAL=moy-nalog,undici     # разрешить использование внешних пакетов
+      - MOY_NALOG_PROXY=http://51.250.1.144:8888  # прокси только для МойНалог API
+      - N8N_RUNNERS_DISABLED=true                  # отключить Task Runner для доступа к сети
+
+  # --- Moy Nalog API wrapper ---
+  moy-nalog-api:
+    build: ./moy-nalog-api
+    restart: unless-stopped
+    expose:
+      - "3100"
+    networks: [default]
 
   # --- Monitoring stack ---
   prometheus:
     image: prom/prometheus:latest
     restart: unless-stopped
     depends_on: [alertmanager]
+    deploy:
+      resources:
+        limits:
+          memory: 320M
+        reservations:
+          memory: 128M
     volumes:
       - /opt/n8n/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - /opt/n8n/monitoring/prom_data:/prometheus
@@ -97,6 +141,12 @@ services:
   grafana:
     image: grafana/grafana:latest
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 128M
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
