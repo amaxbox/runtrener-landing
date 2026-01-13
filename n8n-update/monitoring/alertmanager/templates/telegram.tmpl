@@ -1,16 +1,17 @@
 {{ define "telegram.heartbeat" }}
 {{- $alert := (index .Alerts 0) -}}
 ✅ <b>n8n в порядке</b>
-Основной инстанс, публичный endpoint и воркеры отвечают.
 {{- if $alert }}
   {{- if $alert.Annotations.workers }}
-Воркеры: {{ $alert.Annotations.workers }}
+Workers: {{ $alert.Annotations.workers }}
   {{- end }}
-  {{- if $alert.Annotations.load }}
-Load1: {{ $alert.Annotations.load }}
+  {{- if $alert.Annotations.load }} | Load: {{ $alert.Annotations.load }}
   {{- end }}
-  {{- if $alert.Annotations.cpu }}
-CPU: {{ $alert.Annotations.cpu }}
+  {{- if $alert.Annotations.cpu }} | CPU: {{ $alert.Annotations.cpu }}
+  {{- end }}
+  {{- if $alert.Annotations.memory_used }} | Mem: {{ $alert.Annotations.memory_used }}
+  {{- end }}
+  {{- if $alert.Annotations.disk_free }} | Disk: {{ $alert.Annotations.disk_free }}
   {{- end }}
 {{- end }}
 {{ end }}

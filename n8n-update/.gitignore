@@ -1,0 +1,6 @@
+
+# Monitoring runtime and generated files
+monitoring/alertmanager/alertmanager.yml
+monitoring/alertmanager/data/
+monitoring/prom_data/
+monitoring/grafana/

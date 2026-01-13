@@ -1,9 +1,10 @@
 groups:
   - name: n8n_recording_rules
     rules:
-      # Подсчет запущенных воркеров через cAdvisor
       - record: n8n:workers_up
-        expr: count(container_cpu_usage_seconds_total{name=~"n8n-n8n-worker-.*"})
+        expr: sum(up{job="n8n",instance=~".*worker.*"})
+      - record: n8n:workers_expected
+        expr: max_over_time(sum(up{job="n8n",instance=~".*worker.*"})[1h:])
       - record: n8n:main_up
         expr: sum(up{job="n8n",instance=~".*main.*"})
       - record: n8n:public_probe_success
@@ -14,19 +15,41 @@ groups:
         expr: avg(node_load1)
       - record: node:cpu_utilization_5m
         expr: avg(rate(node_cpu_seconds_total{mode!="idle"}[5m]))
+      - record: node:disk_free_percent
+        expr: 100 * (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"})
+      - record: postgres:up
+        expr: sum(up{job="postgres"})
+      - record: redis:up
+        expr: sum(up{job="redis"})
+      - record: cadvisor:up
+        expr: sum(up{job="cadvisor"})
+      - record: grafana:up
+        expr: sum(up{job="grafana"})
+      - record: prometheus:up
+        expr: sum(up{job="prometheus"})
+      - record: node:memory_used_percent
+        expr: 100 * (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes))
+      - record: node:memory_available_bytes
+        expr: node_memory_MemAvailable_bytes
 
   - name: n8n_alerts
     rules:
       - alert: N8NHeartbeat
-        expr: n8n:main_up == 1 and n8n:public_probe_success == 1
+        expr: n8n:main_up == 1 and n8n:workers_up >= 1 and n8n:public_probe_success == 1
         labels:
           severity: info
         annotations:
           summary: "n8n доступен"
-          description: "Основной инстанс и публичный endpoint отвечают."
+          description: "Основной инстанс, публичный endpoint и воркеры отвечают."
           cpu: '{{ with query "node:cpu_utilization_5m" }}{{ if gt (len .) 0 }}{{ humanizePercentage (index . 0).Value }}{{ else }}н/д{{ end }}{{ end }}'
           load: '{{ with query "node:load1_avg" }}{{ if gt (len .) 0 }}{{ printf "%.2f" (index . 0).Value }}{{ else }}н/д{{ end }}{{ end }}'
           workers: '{{ with query "n8n:workers_up" }}{{ if gt (len .) 0 }}{{ printf "%.0f" (index . 0).Value }}{{ else }}н/д{{ end }}{{ end }}'
+          memory_used: '{{ with query "node:memory_used_percent" }}{{ if gt (len .) 0 }}{{ printf "%.1f%%" (index . 0).Value }}{{ else }}н/д{{ end }}{{ end }}'
+          disk_free: '{{ with query "node:disk_free_percent" }}{{ if gt (len .) 0 }}{{ printf "%.1f%%" (index . 0).Value }}{{ else }}н/д{{ end }}{{ end }}'
+          postgres: '{{ with query "postgres:up" }}{{ if gt (len .) 0 }}{{ if eq (index . 0).Value 1.0 }}✓{{ else }}✗{{ end }}{{ else }}н/д{{ end }}{{ end }}'
+          redis: '{{ with query "redis:up" }}{{ if gt (len .) 0 }}{{ if eq (index . 0).Value 1.0 }}✓{{ else }}✗{{ end }}{{ else }}н/д{{ end }}{{ end }}'
+          grafana: '{{ with query "grafana:up" }}{{ if gt (len .) 0 }}{{ if eq (index . 0).Value 1.0 }}✓{{ else }}✗{{ end }}{{ else }}н/д{{ end }}{{ end }}'
+          prometheus: '{{ with query "prometheus:up" }}{{ if gt (len .) 0 }}{{ if eq (index . 0).Value 1.0 }}✓{{ else }}✗{{ end }}{{ else }}н/д{{ end }}{{ end }}'
       - alert: N8NMainInstanceDown
         expr: n8n:main_up < 1
         for: 2m
@@ -43,6 +66,14 @@ groups:
         annotations:
           summary: "Публичный endpoint n8n не отвечает"
           description: "Blackbox-пробник возвращает ошибку для внешнего хоста n8n."
+      - alert: N8NWorkersReduced
+        expr: (n8n:workers_expected > 0) and (n8n:workers_up < n8n:workers_expected)
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Снижение числа воркеров"
+          description: "Число активных воркеров ниже ожидаемого окна за последний час."
       - alert: N8NNodeHighCpu
         expr: node:cpu_utilization_5m > 0.8
         for: 10m
@@ -59,3 +90,41 @@ groups:
         annotations:
           summary: "Высокая задержка event loop"
           description: "Показатель event loop lag превысил 0.5 секунды."
+      - alert: N8NDiskSpaceLow
+        expr: node:disk_free_percent < 20
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Мало свободного места на диске"
+          description: "Свободного места на диске осталось менее 20%."
+          disk_free: '{{ with query "node:disk_free_percent" }}{{ if gt (len .) 0 }}{{ printf "%.1f%%" (index . 0).Value }}{{ else }}н/д{{ end }}{{ end }}'
+      - alert: N8NDiskSpaceCritical
+        expr: node:disk_free_percent < 10
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Критически мало места на диске"
+          description: "Свободного места на диске осталось менее 10%!"
+          disk_free: '{{ with query "node:disk_free_percent" }}{{ if gt (len .) 0 }}{{ printf "%.1f%%" (index . 0).Value }}{{ else }}н/д{{ end }}{{ end }}'
+      - alert: N8NMemoryHigh
+        expr: node:memory_used_percent > 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Высокое использование памяти"
+          description: "Использование памяти превысило 85%."
+          memory_used: '{{ with query "node:memory_used_percent" }}{{ if gt (len .) 0 }}{{ printf "%.1f%%" (index . 0).Value }}{{ else }}н/д{{ end }}{{ end }}'
+          memory_available: '{{ with query "node:memory_available_bytes" }}{{ if gt (len .) 0 }}{{ humanize (index . 0).Value }}B{{ else }}н/д{{ end }}{{ end }}'
+      - alert: N8NMemoryCritical
+        expr: node:memory_used_percent > 95
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Критическое использование памяти"
+          description: "Использование памяти превысило 95%! Возможен OOM Killer."
+          memory_used: '{{ with query "node:memory_used_percent" }}{{ if gt (len .) 0 }}{{ printf "%.1f%%" (index . 0).Value }}{{ else }}н/д{{ end }}{{ end }}'
+          memory_available: '{{ with query "node:memory_available_bytes" }}{{ if gt (len .) 0 }}{{ humanize (index . 0).Value }}B{{ else }}н/д{{ end }}{{ end }}'
