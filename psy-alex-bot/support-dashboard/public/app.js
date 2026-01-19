@@ -746,39 +746,18 @@ async function loadUserData(userId) {
 
 function renderUserBasicInfo(user) {
     if (!user) {
-        document.getElementById('headerUserInfo').innerHTML = '<div class="text-red-500 text-sm">Пользователь не найден</div>';
+        document.getElementById('headerUserInfoText').innerHTML = '<div class="text-red-500 text-sm">Пользователь не найден</div>';
         return;
     }
 
     const fullName = [user.first_name, user.last_name].filter(Boolean).join(' ') || '—';
     const username = user.username ? `@${user.username}` : '';
+    const statusLabel = getSubscribeLabel(user.subscribe, user.pro_before);
 
-    const html = `
-        <div class="flex items-start justify-between gap-4">
-            <div class="flex-1">
-                <div class="flex items-center gap-3 mb-2">
-                    <h2 class="text-2xl font-semibold text-apple-gray-900">${fullName}</h2>
-                    ${username ? `<span class="text-lg text-apple-gray-600">${username}</span>` : ''}
-                    ${getSubscribeLabel(user.subscribe, user.pro_before)}
-                </div>
-                <div class="flex items-center gap-6 text-sm text-apple-gray-600">
-                    <div class="flex items-center gap-2">
-                        <span class="font-medium">ID:</span>
-                        <span>${user.telegram_user_id}</span>
-                        <button onclick="copyToClipboard('${user.telegram_user_id}', this)" class="text-apple-gray-400 hover:text-apple-blue transition" title="Копировать">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                            </svg>
-                        </button>
-                    </div>
-                    <div><span class="font-medium">Статус:</span> ${user.status || 'active'}</div>
-                    <div><span class="font-medium">Регистрация:</span> ${user.created_at ? formatDate(user.created_at) : '—'}</div>
-                </div>
-            </div>
-        </div>
-    `;
+    // Format user info for sticky header (compact format)
+    const userInfoText = `${fullName} ${username ? `(${username})` : ''} • ID: ${user.telegram_user_id} • ${statusLabel}`;
 
-    document.getElementById('headerUserInfo').innerHTML = html;
+    document.getElementById('headerUserInfoText').innerHTML = userInfoText;
 
     // Adjust content padding after rendering user info
     setTimeout(() => {
