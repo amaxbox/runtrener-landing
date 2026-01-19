@@ -168,9 +168,199 @@ function resetFilters() {
 }
 
 function viewUser(telegramUserId) {
-    // Store userId in sessionStorage and redirect to view page
-    sessionStorage.setItem('viewUserId', telegramUserId);
-    window.location.href = `/user.html?id=${telegramUserId}`;
+    // Open side panel with user details
+    currentSelectedUserId = telegramUserId;
+    document.getElementById('userDetailPanel').classList.remove('hidden');
+
+    // Load user data
+    loadUserData(telegramUserId);
+    switchTab('chat');
+}
+
+function closeUserDetail() {
+    // Hide side panel
+    document.getElementById('userDetailPanel').classList.add('hidden');
+    currentSelectedUserId = null;
+}
+
+function switchTab(tabName) {
+    // Hide all tab contents
+    document.querySelectorAll('.tab-content').forEach(el => {
+        el.classList.remove('active');
+        el.style.display = 'none';
+    });
+
+    // Show selected tab
+    const selectedTab = document.getElementById(`tab-${tabName}`);
+    if (selectedTab) {
+        selectedTab.classList.add('active');
+        selectedTab.style.display = 'block';
+    }
+
+    // Update tab button styles
+    document.querySelectorAll('.tab-button').forEach(btn => {
+        if (btn.dataset.tab === tabName) {
+            btn.className = 'tab-button py-4 text-sm font-medium text-apple-blue border-b-2 border-apple-blue whitespace-nowrap transition';
+        } else {
+            btn.className = 'tab-button py-4 text-sm font-medium text-apple-gray-600 border-b-2 border-transparent whitespace-nowrap hover:text-apple-gray-900 transition';
+        }
+    });
+}
+
+async function loadUserData(telegramUserId) {
+    try {
+        const response = await apiCall(`/api/user/${telegramUserId}`);
+        if (!response) return;
+
+        const data = await response.json();
+
+        // Update user header info
+        const fullName = [data.userInfo.first_name, data.userInfo.last_name].filter(Boolean).join(' ') || '—';
+        document.getElementById('userNameHeader').textContent = fullName;
+        document.getElementById('userIdHeader').textContent = `ID: ${telegramUserId}`;
+
+        // Render all data
+        renderChatMessages(data.chatLogs || []);
+        renderTherapyProfile(data.therapyProfile || {});
+        renderUserPayments(data.payments || []);
+        renderUserInfo(data.userInfo);
+
+        // Update messages count
+        const totalMessages = data.chatLogs?.length || 0;
+        document.getElementById('chatMessagesCount').textContent = totalMessages > 0
+            ? `Показано 1-${Math.min(50, totalMessages)} из ${totalMessages}`
+            : 'Сообщений не найдено';
+    } catch (error) {
+        console.error('Error loading user data:', error);
+    }
+}
+
+// Chat messages are loaded with user data, this is kept for backward compatibility
+async function loadChatMessages(telegramUserId, page = 0) {
+    // Messages are now loaded with loadUserData
+    return;
+}
+
+function renderChatMessages(messages) {
+    if (!messages || messages.length === 0) {
+        document.getElementById('chatLogs').innerHTML = '<div class="text-center text-apple-gray-600">Сообщений не найдено</div>';
+        return;
+    }
+
+    const html = messages.map(msg => `
+        <div class="mb-4 p-4 bg-apple-gray-50 rounded-apple">
+            <div class="flex justify-between items-start mb-2">
+                <span class="text-xs font-medium text-apple-gray-600">${msg.role || 'User'}</span>
+                <span class="text-xs text-apple-gray-500">${new Date(msg.created_at).toLocaleString('ru-RU')}</span>
+            </div>
+            <p class="text-sm text-apple-gray-900">${msg.content || '—'}</p>
+        </div>
+    `).join('');
+
+    document.getElementById('chatLogs').innerHTML = html;
+}
+
+function renderChatPagination(telegramUserId, currentPage, totalPages) {
+    let html = '';
+
+    if (currentPage > 0) {
+        html += `<button onclick="viewUser(${telegramUserId}); loadChatMessages(${telegramUserId}, ${currentPage - 1})" class="px-4 py-2 bg-white border border-apple-gray-200 rounded-lg hover:bg-apple-gray-50 text-sm">← Назад</button>`;
+    }
+
+    for (let i = Math.max(0, currentPage - 2); i < Math.min(totalPages, currentPage + 3); i++) {
+        const activeClass = i === currentPage ? 'bg-blue-600 text-white' : 'bg-white border border-apple-gray-200 hover:bg-apple-gray-50';
+        html += `<button onclick="viewUser(${telegramUserId}); loadChatMessages(${telegramUserId}, ${i})" class="px-4 py-2 ${activeClass} rounded-lg text-sm">${i + 1}</button>`;
+    }
+
+    if (currentPage < totalPages - 1) {
+        html += `<button onclick="viewUser(${telegramUserId}); loadChatMessages(${telegramUserId}, ${currentPage + 1})" class="px-4 py-2 bg-white border border-apple-gray-200 rounded-lg hover:bg-apple-gray-50 text-sm">Вперёд →</button>`;
+    }
+
+    document.getElementById('chatPagination').innerHTML = html;
+}
+
+// Therapy profile is loaded with user data
+async function loadTherapyProfile(telegramUserId) {
+    return;
+}
+
+function renderTherapyProfile(data) {
+    if (!data) {
+        document.getElementById('therapyProfile').innerHTML = '<div class="text-center text-apple-gray-600">Данные не найдены</div>';
+        return;
+    }
+
+    const html = `
+        <div class="space-y-4">
+            ${Object.entries(data).map(([key, value]) => `
+                <div class="p-4 bg-apple-gray-50 rounded-apple">
+                    <span class="text-xs font-medium text-apple-gray-600">${key}</span>
+                    <p class="text-sm text-apple-gray-900 mt-1">${value || '—'}</p>
+                </div>
+            `).join('')}
+        </div>
+    `;
+
+    document.getElementById('therapyProfile').innerHTML = html;
+}
+
+// Payments are loaded with user data
+async function loadUserPayments(telegramUserId) {
+    return;
+}
+
+function renderUserPayments(payments) {
+    if (!payments || payments.length === 0) {
+        document.getElementById('payments').innerHTML = '<div class="text-center text-apple-gray-600">Платежей не найдено</div>';
+        return;
+    }
+
+    const html = payments.map(payment => `
+        <div class="mb-4 p-4 bg-apple-gray-50 rounded-apple">
+            <div class="flex justify-between items-start mb-2">
+                <span class="text-sm font-medium text-apple-gray-900">${payment.amount || '—'} ₽</span>
+                <span class="text-xs text-apple-gray-500">${new Date(payment.payment_date).toLocaleDateString('ru-RU')}</span>
+            </div>
+            <p class="text-xs text-apple-gray-600">Длительность: ${payment.duration || '—'}</p>
+            ${payment.receipt_url ? `<a href="${payment.receipt_url}" target="_blank" class="text-xs text-blue-600 hover:underline mt-2 inline-block">Чек</a>` : ''}
+        </div>
+    `).join('');
+
+    document.getElementById('payments').innerHTML = html;
+}
+
+function renderUserInfo(user) {
+    const info = {
+        'ID': user.telegram_user_id,
+        'Имя': user.first_name || '—',
+        'Фамилия': user.last_name || '—',
+        'Username': user.username ? `@${user.username}` : '—',
+        'Статус': user.status || '—',
+        'Подписка': user.subscribe === 'pro' ? 'PRO' : 'Free',
+        'Регистрация': user.created_at ? new Date(user.created_at).toLocaleDateString('ru-RU') : '—',
+        'Последняя активность': user.updated_at ? new Date(user.updated_at).toLocaleDateString('ru-RU') : '—',
+    };
+
+    const html = `
+        <div class="space-y-3">
+            ${Object.entries(info).map(([key, value]) => `
+                <div class="p-3 bg-apple-gray-50 rounded-apple">
+                    <span class="text-xs font-medium text-apple-gray-600">${key}</span>
+                    <p class="text-sm text-apple-gray-900 mt-1">${value}</p>
+                </div>
+            `).join('')}
+        </div>
+    `;
+
+    document.getElementById('userInfo').innerHTML = html;
+}
+
+function shareUserLink() {
+    if (!currentSelectedUserId) return;
+    const link = `${window.location.origin}/users.html?user=${currentSelectedUserId}`;
+    navigator.clipboard.writeText(link).then(() => {
+        alert('Ссылка скопирована в буфер обмена');
+    });
 }
 
 // Initialize
@@ -179,6 +369,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('applyFilters')?.addEventListener('click', applyFilters);
     document.getElementById('resetFilters')?.addEventListener('click', resetFilters);
+
+    // Tab switching
+    document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+    });
+
+    // Chat sort buttons
+    document.getElementById('sortNewestFirst')?.addEventListener('click', () => {
+        chatSortOrder = 'newest';
+        if (currentSelectedUserId) loadChatMessages(currentSelectedUserId);
+    });
+
+    document.getElementById('sortOldestFirst')?.addEventListener('click', () => {
+        chatSortOrder = 'oldest';
+        if (currentSelectedUserId) loadChatMessages(currentSelectedUserId);
+    });
 
     updateSubscriptionButtonStyles();
     loadUsersList();
