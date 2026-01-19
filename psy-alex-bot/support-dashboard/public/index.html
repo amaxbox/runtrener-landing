@@ -54,6 +54,12 @@
             .user-data.active {
                 display: block;
             }
+            section {
+                display: block;
+            }
+            section.hidden {
+                display: none;
+            }
         }
 
         body.login-active {
@@ -156,7 +162,7 @@
         <!-- Main Content -->
         <div id="mainContent" class="pt-20">
             <!-- Users Section -->
-            <section id="usersSection" class="md:grid md:grid-cols-[450px_1fr]">
+            <section id="usersSection" class="md:grid md:grid-cols-[450px_1fr] block">
             <!-- Left Panel: Users List (always visible on desktop) -->
             <div class="md:h-[calc(100vh-var(--header-height))] md:overflow-y-auto md:border-r md:border-apple-gray-200 md:sticky md:top-[var(--header-height)]" id="usersListView">
                 <div class="max-w-7xl mx-auto px-8 py-10">
