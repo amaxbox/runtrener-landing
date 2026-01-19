@@ -247,15 +247,37 @@ function renderChatMessages(messages) {
         return;
     }
 
-    const html = messages.map(msg => `
-        <div class="mb-4 p-4 bg-apple-gray-50 rounded-apple">
-            <div class="flex justify-between items-start mb-2">
-                <span class="text-xs font-medium text-apple-gray-600">${msg.role || 'User'}</span>
-                <span class="text-xs text-apple-gray-500">${new Date(msg.created_at).toLocaleString('ru-RU')}</span>
-            </div>
-            <p class="text-sm text-apple-gray-900">${msg.content || '—'}</p>
-        </div>
-    `).join('');
+    const html = messages.map(msg => {
+        const createdDate = msg.created_at ? new Date(msg.created_at).toLocaleString('ru-RU') : '—';
+        let html = '';
+
+        // User message
+        if (msg.user_input) {
+            html += `
+                <div class="mb-6 pb-6 border-b border-apple-gray-200 last:border-b-0">
+                    <div class="mb-2">
+                        <span class="text-xs font-medium text-apple-blue bg-blue-50 px-2 py-1 rounded-apple">👤 Пользователь</span>
+                        <span class="text-xs text-apple-gray-500 ml-2">${createdDate}</span>
+                    </div>
+                    <p class="text-sm text-apple-gray-900 whitespace-pre-wrap">${msg.user_input}</p>
+                </div>
+            `;
+        }
+
+        // Model response
+        if (msg.model_output) {
+            html += `
+                <div class="mb-6">
+                    <div class="mb-2">
+                        <span class="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-1 rounded-apple">🤖 Ответ</span>
+                    </div>
+                    <div class="text-sm text-apple-gray-900 whitespace-pre-wrap bg-purple-50 p-3 rounded-apple">${msg.model_output}</div>
+                </div>
+            `;
+        }
+
+        return html;
+    }).join('');
 
     document.getElementById('chatLogs').innerHTML = html;
 }

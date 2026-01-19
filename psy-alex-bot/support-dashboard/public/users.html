@@ -150,26 +150,32 @@
             </div>
         </div>
 
-        <!-- Right: User Detail Side Panel (Desktop: 320px max width, Mobile: fullscreen) -->
-        <div class="hidden md:block md:w-80 md:overflow-y-auto md:max-h-[calc(100vh-80px)] md:border-l md:border-apple-gray-200" id="userDetailPanel">
+        <!-- Right: User Detail Side Panel (Desktop: 640px max, but not more than 50% screen, Mobile: fullscreen) -->
+        <div class="hidden md:block md:w-[640px] md:overflow-y-auto md:max-h-[calc(100vh-80px)] md:border-l md:border-apple-gray-200 md:max-w-[50vw]" id="userDetailPanel">
+            <!-- User Detail Content -->
             <div class="px-6 py-10">
                 <!-- Close Button & User Header -->
-                <div class="flex items-center justify-between mb-8 sticky top-0 bg-apple-gray-50 -mx-8 px-8 pt-4 pb-4">
+                <div class="flex items-center justify-between mb-8 sticky top-0 bg-white/95 -mx-6 px-6 pt-3 pb-3 border-b border-apple-gray-200">
+                    <div class="flex items-center gap-2">
+                        <button
+                            onclick="shareUserLink()"
+                            class="p-2 text-apple-blue hover:opacity-80 transition rounded-apple"
+                            id="shareUserLinkBtn"
+                            title="Скопировать ссылку"
+                        >
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.658 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+                            </svg>
+                        </button>
+                    </div>
                     <button
                         onclick="closeUserDetail()"
-                        class="px-4 py-2 text-sm font-medium text-apple-blue hover:opacity-80 transition rounded-apple border border-apple-blue inline-flex items-center gap-1"
+                        class="p-2 text-apple-gray-600 hover:text-apple-gray-900 hover:opacity-80 transition rounded-apple"
+                        title="Закрыть"
                     >
-                        <span>←</span> Назад
-                    </button>
-                    <button
-                        onclick="shareUserLink()"
-                        class="px-4 py-2 text-sm font-medium text-apple-blue hover:opacity-80 transition rounded-apple border border-apple-blue inline-flex items-center gap-2"
-                        id="shareUserLinkBtn"
-                    >
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.658 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
-                        Ссылка
                     </button>
                 </div>
 
@@ -238,6 +244,30 @@
             </div>
         </div>
     </div>
+
+    <style>
+        .tab-content {
+            max-height: calc(100vh - 400px);
+            overflow-y: auto;
+        }
+
+        .tab-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .tab-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .tab-content::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 3px;
+        }
+
+        .tab-content::-webkit-scrollbar-thumb:hover {
+            background: #999;
+        }
+    </style>
 
     <script src="auth.js"></script>
     <script src="users.js"></script>
