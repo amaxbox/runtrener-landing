@@ -1,31 +1,41 @@
 // Authentication module - shared across all pages
+// JWT token stored in localStorage for persistence across tabs and sessions
 
 const API_BASE = window.location.pathname.startsWith('/support') ? '/support' : '';
 const AUTH_KEY = 'supportAuth';
-const PASSWORD_KEY = 'supportPassword';
+const TOKEN_KEY = 'supportToken';
 
 class AuthManager {
     constructor() {
-        this.password = this.loadPassword();
-        this.isAuthenticated = !!this.password;
+        this.token = this.loadToken();
+        this.isAuthenticated = !!this.token;
     }
 
-    loadPassword() {
-        return sessionStorage.getItem(PASSWORD_KEY);
+    loadToken() {
+        return localStorage.getItem(TOKEN_KEY);
     }
 
-    savePassword(password) {
-        this.password = password;
-        sessionStorage.setItem(PASSWORD_KEY, password);
-        sessionStorage.setItem(AUTH_KEY, 'true');
+    saveToken(token) {
+        this.token = token;
+        localStorage.setItem(TOKEN_KEY, token);
+        localStorage.setItem(AUTH_KEY, 'true');
         this.isAuthenticated = true;
     }
 
     logout() {
-        sessionStorage.removeItem(AUTH_KEY);
-        sessionStorage.removeItem(PASSWORD_KEY);
-        this.password = null;
+        localStorage.removeItem(AUTH_KEY);
+        localStorage.removeItem(TOKEN_KEY);
+        this.token = null;
         this.isAuthenticated = false;
+
+        // Clear all saved filters and periods from localStorage
+        try {
+            localStorage.removeItem('usersFilters');
+            localStorage.removeItem('paymentsFilters');
+            localStorage.removeItem('dashboardPeriods');
+        } catch (e) {
+            console.error('Error clearing localStorage:', e);
+        }
     }
 
     async verifyPassword(password) {
@@ -40,21 +50,27 @@ class AuthManager {
 
             if (response.ok) {
                 const data = await response.json();
-                if (data.success) {
-                    this.savePassword(password);
+                if (data.success && data.token) {
+                    this.saveToken(data.token);
                     return true;
                 }
+            } else if (response.status === 429) {
+                // Rate limit exceeded
+                throw new Error('Слишком много попыток входа. Попробуйте позже.');
             }
             return false;
         } catch (error) {
             console.error('Auth verification error:', error);
-            return false;
+            throw error;
         }
     }
 
     requireAuth() {
         if (!this.isAuthenticated) {
-            window.location.href = '/';
+            // Save current URL with parameters to restore after login
+            const returnUrl = window.location.pathname + window.location.search;
+            sessionStorage.setItem('returnUrl', returnUrl);
+            window.location.href = `${API_BASE}/`;
             return false;
         }
         return true;
@@ -62,7 +78,7 @@ class AuthManager {
 
     getAuthHeader() {
         return {
-            'X-Support-Password': this.password
+            'Authorization': `Bearer ${this.token}`
         };
     }
 }
@@ -74,24 +90,36 @@ const auth = new AuthManager();
 if (!window.location.pathname.endsWith('/') &&
     !window.location.pathname.endsWith('/index.html') &&
     !auth.isAuthenticated) {
-    window.location.href = '/';
+    // Save current URL with parameters to restore after login
+    const returnUrl = window.location.pathname + window.location.search;
+    sessionStorage.setItem('returnUrl', returnUrl);
+    window.location.href = `${API_BASE}/`;
 }
 
 // Helper function for API calls with auth
 async function apiCall(endpoint, options = {}) {
+    // Get current bot ID from botManager (if available)
+    const botId = typeof botManager !== 'undefined' ? botManager.getCurrentBotId() : 'alex';
+
+    // Add botId to URL query parameter
+    const separator = endpoint.includes('?') ? '&' : '?';
+    const urlWithBot = `${endpoint}${separator}botId=${botId}`;
+
     const headers = {
+        'Content-Type': 'application/json',
+        'X-Bot-Id': botId,  // Also add to header
         ...options.headers,
         ...auth.getAuthHeader()
     };
 
-    const response = await fetch(`${API_BASE}${endpoint}`, {
+    const response = await fetch(`${API_BASE}${urlWithBot}`, {
         ...options,
         headers
     });
 
     if (response.status === 401) {
         auth.logout();
-        window.location.href = '/';
+        window.location.href = `${API_BASE}/`;
         return null;
     }
 

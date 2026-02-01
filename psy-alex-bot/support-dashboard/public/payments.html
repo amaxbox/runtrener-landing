@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Реестр оплат - Support Dashboard</title>
+    <title>Реестр оплат - Админка</title>
     <meta name="robots" content="noindex, nofollow">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
@@ -26,6 +27,14 @@
                             700: '#636366',
                             800: '#48484A',
                             900: '#1C1C1E',
+                        },
+                        'dark': {
+                            bg: '#000000',
+                            'bg-secondary': '#1C1C1E',
+                            'bg-tertiary': '#2C2C2E',
+                            border: '#48484A',
+                            text: '#FFFFFF',
+                            'text-secondary': '#AEAEB2'
                         }
                     },
                     boxShadow: {
@@ -40,25 +49,38 @@
             }
         }
     </script>
+    <style>
+        /* Fix calendar icon visibility in dark mode */
+        .dark input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+    </style>
 </head>
-<body class="bg-apple-gray-50 antialiased">
+<body class="bg-apple-gray-50 dark:bg-dark-bg antialiased">
     <!-- Fixed Header -->
-    <div class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-2xl border-b border-apple-gray-200 shadow-apple-sm">
-        <div class="max-w-7xl mx-auto px-8 py-3">
+    <div class="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-dark-bg-secondary/95 backdrop-blur-2xl border-b border-apple-gray-200 dark:border-dark-border dark:border-dark-border shadow-apple-sm">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 py-3">
             <div class="flex justify-between items-center">
-                <div class="flex items-center gap-6">
-                    <a href="/dashboard.html" class="text-2xl font-semibold text-apple-gray-900 tracking-tight hover:opacity-80">Support</a>
+                <div class="flex items-center gap-4 md:gap-6">
+                    <a href="dashboard.html" class="text-xl md:text-2xl font-semibold text-apple-gray-900 dark:text-dark-text tracking-tight hover:opacity-80">Админка</a>
 
-                    <!-- Main Navigation -->
-                    <div class="flex gap-4">
+                    <!-- Desktop Navigation -->
+                    <div class="hidden md:flex gap-4">
                         <a
-                            href="/users.html"
-                            class="px-4 py-2 text-sm font-medium text-apple-gray-600 border-b-2 border-transparent hover:text-apple-gray-900 transition"
+                            href="dashboard.html"
+                            class="px-4 py-2 text-sm font-medium text-apple-gray-600 border-b-2 border-transparent hover:text-apple-gray-900 dark:text-dark-text transition"
+                        >
+                            Дашборд
+                        </a>
+                        <a
+                            href="users.html"
+                            class="px-4 py-2 text-sm font-medium text-apple-gray-600 border-b-2 border-transparent hover:text-apple-gray-900 dark:text-dark-text transition"
                         >
                             Пользователи
                         </a>
                         <a
-                            href="/payments.html"
+                            href="payments.html"
                             class="px-4 py-2 text-sm font-medium text-apple-blue border-b-2 border-apple-blue transition"
                         >
                             Реестр оплат
@@ -66,9 +88,103 @@
                     </div>
                 </div>
 
+                <div class="flex items-center gap-2">
+                    <!-- Bot Switcher Dropdown -->
+                    <div class="relative hidden md:block">
+                        <button
+                            id="botSwitcher"
+                            class="flex items-center gap-2 px-3 py-2 rounded-apple hover:bg-apple-gray-100 dark:hover:bg-dark-bg-tertiary transition"
+                            title="Переключить бота"
+                        >
+                            <span id="currentBotColor" class="w-3 h-3 rounded-full bg-apple-blue"></span>
+                            <span id="currentBotName" class="text-sm font-medium text-apple-gray-900 dark:text-dark-text">Алекс</span>
+                            <svg class="w-4 h-4 text-apple-gray-600 dark:text-dark-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div
+                            id="botDropdown"
+                            class="hidden absolute right-0 mt-2 w-56 bg-white dark:bg-dark-bg-secondary rounded-apple shadow-apple border border-apple-gray-200 dark:border-dark-border overflow-hidden z-[100]"
+                            style="max-height: 300px; overflow-y: auto;"
+                        >
+                            <!-- Dropdown items will be populated by bot-dropdown.js -->
+                        </div>
+                    </div>
+
+                    <!-- Theme Toggle Button -->
+                    <button
+                        id="themeToggle"
+                        onclick="themeManager.toggle()"
+                        class="p-2.5 rounded-apple hover:bg-apple-gray-100 dark:hover:bg-dark-bg-tertiary transition"
+                        title="Toggle theme"
+                    >
+                        <!-- Sun Icon (shown in dark mode) -->
+                        <svg class="w-5 h-5 hidden dark:block text-dark-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                        <!-- Moon Icon (shown in light mode) -->
+                        <svg class="w-5 h-5 block dark:hidden text-apple-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                        </svg>
+                    </button>
+
+                    <!-- Mobile Menu Button -->
+                    <button
+                        id="mobileMenuBtn"
+                        onclick="toggleMobileMenu()"
+                        class="md:hidden p-2 text-apple-gray-600 dark:text-dark-text-secondary hover:text-apple-gray-900 dark:hover:text-dark-text"
+                    >
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+
+                    <!-- Desktop Logout Button -->
+                    <button
+                        onclick="logout()"
+                        class="hidden md:block px-5 py-2.5 text-sm font-medium text-apple-blue hover:opacity-80 transition rounded-apple"
+                    >
+                        Выйти
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobileMenuOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden" onclick="toggleMobileMenu()"></div>
+
+    <!-- Mobile Menu Panel -->
+    <div id="mobileMenuPanel" class="fixed top-0 right-0 bottom-0 w-64 bg-white dark:bg-dark-bg-secondary z-50 transform translate-x-full transition-transform duration-300 md:hidden shadow-2xl">
+        <div class="flex flex-col h-full">
+            <!-- Mobile Menu Header -->
+            <div class="flex items-center justify-between p-4 border-b border-apple-gray-200 dark:border-dark-border">
+                <span class="text-lg font-semibold text-apple-gray-900 dark:text-dark-text">Меню</span>
+                <button onclick="toggleMobileMenu()" class="p-2 text-apple-gray-600 dark:text-dark-text-secondary hover:text-apple-gray-900 dark:hover:text-dark-text">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Mobile Menu Items -->
+            <div class="flex-1 py-4">
+                <a href="dashboard.html" class="block px-6 py-3 text-base font-medium text-apple-gray-700 dark:text-dark-text-secondary hover:bg-apple-gray-50 dark:hover:bg-dark-bg-tertiary transition">
+                    Дашборд
+                </a>
+                <a href="users.html" class="block px-6 py-3 text-base font-medium text-apple-gray-700 dark:text-dark-text-secondary hover:bg-apple-gray-50 dark:hover:bg-dark-bg-tertiary transition">
+                    Пользователи
+                </a>
+                <a href="payments.html" class="block px-6 py-3 text-base font-medium text-apple-blue bg-apple-gray-50 dark:bg-dark-bg-tertiary transition">
+                    Реестр оплат
+                </a>
+            </div>
+
+            <!-- Mobile Logout Button -->
+            <div class="p-4 border-t border-apple-gray-200 dark:border-dark-border">
                 <button
                     onclick="logout()"
-                    class="px-5 py-2.5 text-sm font-medium text-apple-blue hover:opacity-80 transition rounded-apple"
+                    class="w-full px-5 py-3 text-base font-medium text-white bg-apple-blue hover:opacity-90 transition rounded-apple"
                 >
                     Выйти
                 </button>
@@ -78,30 +194,30 @@
 
     <!-- Main Content -->
     <div class="pt-20">
-        <div class="max-w-7xl mx-auto px-8 py-10">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-10">
             <!-- Header -->
-            <h2 class="text-3xl font-semibold text-apple-gray-900 tracking-tight mb-10">Реестр оплат</h2>
+            <h2 class="text-3xl font-semibold text-apple-gray-900 dark:text-dark-text tracking-tight mb-10">Реестр оплат</h2>
 
             <!-- Filters -->
-            <div class="bg-white rounded-apple-lg p-6 mb-6 shadow-apple">
+            <div class="bg-white dark:bg-dark-bg-secondary rounded-apple-lg p-6 mb-6 shadow-apple">
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-3 mb-4">
                     <input
                         type="text"
                         id="paymentsSearchUserId"
                         placeholder="Поиск по Telegram User ID..."
-                        class="md:col-span-4 px-4 py-2.5 bg-apple-gray-50 border border-apple-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-sm"
+                        class="md:col-span-4 px-4 py-2.5 bg-apple-gray-50 dark:bg-dark-bg-tertiary border border-apple-gray-200 dark:border-dark-border dark:text-dark-text rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-sm"
                     >
 
                     <input
                         type="date"
                         id="paymentsDateFrom"
-                        class="md:col-span-2 w-full px-3 py-2 bg-apple-gray-50 border border-apple-gray-200 rounded-lg text-sm"
+                        class="md:col-span-2 w-full px-3 py-2 bg-apple-gray-50 dark:bg-dark-bg-tertiary border border-apple-gray-200 dark:border-dark-border dark:text-dark-text rounded-lg text-sm"
                     >
 
                     <input
                         type="date"
                         id="paymentsDateTo"
-                        class="md:col-span-2 w-full px-3 py-2 bg-apple-gray-50 border border-apple-gray-200 rounded-lg text-sm"
+                        class="md:col-span-2 w-full px-3 py-2 bg-apple-gray-50 dark:bg-dark-bg-tertiary border border-apple-gray-200 dark:border-dark-border dark:text-dark-text rounded-lg text-sm"
                     >
 
                     <button
@@ -113,20 +229,20 @@
 
                     <button
                         id="resetPaymentsFilters"
-                        class="md:col-span-2 px-5 py-2 bg-apple-gray-100 text-apple-gray-700 rounded-lg hover:bg-apple-gray-200 font-medium text-sm"
+                        class="md:col-span-2 px-5 py-2 bg-apple-gray-100 dark:bg-dark-bg-tertiary text-apple-gray-700 dark:text-dark-text-secondary rounded-lg hover:bg-apple-gray-200 dark:hover:bg-dark-bg-tertiary/80 font-medium text-sm"
                     >
                         Сбросить
                     </button>
                 </div>
 
-                <div class="text-sm text-apple-gray-600">
+                <div class="text-sm text-apple-gray-600 dark:text-dark-text-secondary">
                     <span id="paymentsCount">Показано: 0 платежей</span>
                 </div>
             </div>
 
             <!-- Payments Table -->
-            <div class="bg-white border border-apple-gray-200 rounded-apple-lg overflow-hidden mb-6 shadow-apple" id="paymentsTableContainer">
-                <div class="p-10 text-center text-apple-gray-600">Загрузка...</div>
+            <div class="bg-white dark:bg-dark-bg-secondary border border-apple-gray-200 dark:border-dark-border rounded-apple-lg overflow-hidden mb-6 shadow-apple" id="paymentsTableContainer">
+                <div class="p-10 text-center text-apple-gray-600 dark:text-dark-text-secondary">Загрузка...</div>
             </div>
 
             <!-- Pagination -->
@@ -134,13 +250,34 @@
         </div>
     </div>
 
+    <script src="theme.js"></script>
+    <script src="bot-manager.js"></script>
     <script src="auth.js"></script>
     <script src="payments.js"></script>
+    <script src="bot-dropdown.js"></script>
     <script>
+        function toggleMobileMenu() {
+            const overlay = document.getElementById('mobileMenuOverlay');
+            const panel = document.getElementById('mobileMenuPanel');
+
+            if (panel.classList.contains('translate-x-full')) {
+                // Open menu
+                overlay.classList.remove('hidden');
+                panel.classList.remove('translate-x-full');
+                document.body.style.overflow = 'hidden';
+            } else {
+                // Close menu
+                overlay.classList.add('hidden');
+                panel.classList.add('translate-x-full');
+                document.body.style.overflow = '';
+            }
+        }
+
         function logout() {
             if (confirm('Вы уверены, что хотите выйти?')) {
                 auth.logout();
-                window.location.href = '/';
+                const apiBase = window.location.pathname.startsWith('/support') ? '/support' : '';
+                window.location.href = `${apiBase}/`;
             }
         }
     </script>

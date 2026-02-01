@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Support Dashboard</title>
+    <title>Админка</title>
     <meta name="robots" content="noindex, nofollow">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
@@ -26,6 +27,14 @@
                             700: '#636366',
                             800: '#48484A',
                             900: '#1C1C1E',
+                        },
+                        'dark': {
+                            bg: '#000000',
+                            'bg-secondary': '#1C1C1E',
+                            'bg-tertiary': '#2C2C2E',
+                            border: '#48484A',
+                            text: '#FFFFFF',
+                            'text-secondary': '#AEAEB2'
                         }
                     },
                     boxShadow: {
@@ -48,34 +57,133 @@
         }
     </style>
 </head>
-<body class="bg-apple-gray-50 antialiased">
+<body class="bg-apple-gray-50 dark:bg-dark-bg antialiased">
     <!-- Fixed Header -->
-    <div class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-2xl border-b border-apple-gray-200 shadow-apple-sm">
-        <div class="max-w-7xl mx-auto px-8 py-3">
+    <div class="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-dark-bg-secondary/95 backdrop-blur-2xl border-b border-apple-gray-200 dark:border-dark-border shadow-apple-sm">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 py-3">
             <div class="flex justify-between items-center">
-                <div class="flex items-center gap-6">
-                    <h1 class="text-2xl font-semibold text-apple-gray-900 tracking-tight">Support</h1>
+                <div class="flex items-center gap-4 md:gap-6">
+                    <h1 class="text-xl md:text-2xl font-semibold text-apple-gray-900 dark:text-dark-text tracking-tight">Админка</h1>
 
-                    <!-- Main Navigation -->
-                    <div class="flex gap-4">
+                    <!-- Desktop Navigation -->
+                    <div class="hidden md:flex gap-4">
                         <a
-                            href="/users.html"
+                            href="dashboard.html"
                             class="px-4 py-2 text-sm font-medium text-apple-blue border-b-2 border-apple-blue transition"
+                        >
+                            Дашборд
+                        </a>
+                        <a
+                            href="users.html"
+                            class="px-4 py-2 text-sm font-medium text-apple-gray-600 dark:text-dark-text-secondary border-b-2 border-transparent hover:text-apple-gray-900 dark:hover:text-dark-text transition"
                         >
                             Пользователи
                         </a>
                         <a
-                            href="/payments.html"
-                            class="px-4 py-2 text-sm font-medium text-apple-gray-600 border-b-2 border-transparent hover:text-apple-gray-900 transition"
+                            href="payments.html"
+                            class="px-4 py-2 text-sm font-medium text-apple-gray-600 dark:text-dark-text-secondary border-b-2 border-transparent hover:text-apple-gray-900 dark:hover:text-dark-text transition"
                         >
                             Реестр оплат
                         </a>
                     </div>
                 </div>
 
+                <div class="flex items-center gap-2">
+                    <!-- Bot Switcher Dropdown -->
+                    <div class="relative hidden md:block">
+                        <button
+                            id="botSwitcher"
+                            class="flex items-center gap-2 px-3 py-2 rounded-apple hover:bg-apple-gray-100 dark:hover:bg-dark-bg-tertiary transition"
+                            title="Переключить бота"
+                        >
+                            <span id="currentBotColor" class="w-3 h-3 rounded-full bg-apple-blue"></span>
+                            <span id="currentBotName" class="text-sm font-medium text-apple-gray-900 dark:text-dark-text">Алекс</span>
+                            <svg class="w-4 h-4 text-apple-gray-600 dark:text-dark-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div
+                            id="botDropdown"
+                            class="hidden absolute right-0 mt-2 w-56 bg-white dark:bg-dark-bg-secondary rounded-apple shadow-apple border border-apple-gray-200 dark:border-dark-border overflow-hidden z-[100]"
+                            style="max-height: 300px; overflow-y: auto;"
+                        >
+                            <!-- Dropdown items will be populated by bot-dropdown.js -->
+                        </div>
+                    </div>
+                    <!-- Theme Toggle Button -->
+                    <button
+                        id="themeToggle"
+                        onclick="themeManager.toggle()"
+                        class="p-2.5 rounded-apple hover:bg-apple-gray-100 dark:hover:bg-dark-bg-tertiary transition"
+                        title="Toggle theme"
+                    >
+                        <!-- Sun Icon (shown in dark mode) -->
+                        <svg class="w-5 h-5 hidden dark:block text-dark-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                        <!-- Moon Icon (shown in light mode) -->
+                        <svg class="w-5 h-5 block dark:hidden text-apple-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                        </svg>
+                    </button>
+
+                    <!-- Mobile Menu Button -->
+                    <button
+                        id="mobileMenuBtn"
+                        onclick="toggleMobileMenu()"
+                        class="md:hidden p-2 text-apple-gray-600 dark:text-dark-text-secondary hover:text-apple-gray-900 dark:hover:text-dark-text"
+                    >
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+
+                    <!-- Desktop Logout Button -->
+                    <button
+                        onclick="logout()"
+                        class="hidden md:block px-5 py-2.5 text-sm font-medium text-apple-blue dark:text-apple-blue hover:opacity-80 transition rounded-apple"
+                    >
+                        Выйти
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobileMenuOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden" onclick="toggleMobileMenu()"></div>
+
+    <!-- Mobile Menu Panel -->
+    <div id="mobileMenuPanel" class="fixed top-0 right-0 bottom-0 w-64 bg-white dark:bg-dark-bg-secondary z-50 transform translate-x-full transition-transform duration-300 md:hidden shadow-2xl">
+        <div class="flex flex-col h-full">
+            <!-- Mobile Menu Header -->
+            <div class="flex items-center justify-between p-4 border-b border-apple-gray-200 dark:border-dark-border">
+                <span class="text-lg font-semibold text-apple-gray-900 dark:text-dark-text">Меню</span>
+                <button onclick="toggleMobileMenu()" class="p-2 text-apple-gray-600 dark:text-dark-text-secondary hover:text-apple-gray-900 dark:hover:text-dark-text">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Mobile Menu Items -->
+            <div class="flex-1 py-4">
+                <a href="dashboard.html" class="block px-6 py-3 text-base font-medium text-apple-blue bg-apple-gray-50 dark:bg-dark-bg transition">
+                    Дашборд
+                </a>
+                <a href="users.html" class="block px-6 py-3 text-base font-medium text-apple-gray-700 dark:text-dark-text-secondary hover:bg-apple-gray-50 dark:hover:bg-dark-bg-tertiary transition">
+                    Пользователи
+                </a>
+                <a href="payments.html" class="block px-6 py-3 text-base font-medium text-apple-gray-700 dark:text-dark-text-secondary hover:bg-apple-gray-50 dark:hover:bg-dark-bg-tertiary transition">
+                    Реестр оплат
+                </a>
+            </div>
+
+            <!-- Mobile Logout Button -->
+            <div class="p-4 border-t border-apple-gray-200 dark:border-dark-border">
                 <button
                     onclick="logout()"
-                    class="px-5 py-2.5 text-sm font-medium text-apple-blue hover:opacity-80 transition rounded-apple"
+                    class="w-full px-5 py-3 text-base font-medium text-white bg-apple-blue hover:opacity-90 transition rounded-apple"
                 >
                     Выйти
                 </button>
@@ -85,39 +193,256 @@
 
     <!-- Main Content -->
     <div class="pt-20">
-        <div class="max-w-7xl mx-auto px-8 py-10">
-            <div class="text-center py-20">
-                <h2 class="text-4xl font-semibold text-apple-gray-900 mb-4 tracking-tight">Добро пожаловать!</h2>
-                <p class="text-lg text-apple-gray-600 mb-8">Выберите раздел для начала работы</p>
+        <div class="max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-10">
+            <!-- Loading State -->
+            <div id="dashboardLoader" class="flex items-center justify-center py-20">
+                <div class="text-center">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                    <p class="text-apple-gray-600 dark:text-dark-text-secondary">Загрузка данных...</p>
+                </div>
+            </div>
 
-                <div class="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
-                    <!-- Users Card -->
-                    <a href="/users.html" class="bg-white rounded-apple-lg p-8 shadow-apple hover:shadow-md transition border border-apple-gray-200">
-                        <div class="text-4xl mb-3">👥</div>
-                        <h3 class="text-xl font-semibold text-apple-gray-900 mb-2">Пользователи</h3>
-                        <p class="text-apple-gray-600">Просмотрите информацию о пользователях, чаты, профили и платежи</p>
-                    </a>
+            <!-- Dashboard Content -->
+            <div id="dashboardContent" style="display: none;">
+                <!-- Header -->
+                <div class="mb-8">
+                    <h2 class="text-3xl font-semibold text-apple-gray-900 dark:text-dark-text tracking-tight">Аналитика проекта</h2>
+                </div>
 
-                    <!-- Payments Card -->
-                    <a href="/payments.html" class="bg-white rounded-apple-lg p-8 shadow-apple hover:shadow-md transition border border-apple-gray-200">
-                        <div class="text-4xl mb-3">💳</div>
-                        <h3 class="text-xl font-semibold text-apple-gray-900 mb-2">Реестр оплат</h3>
-                        <p class="text-apple-gray-600">Полный реестр всех платежей с поиском и фильтрацией</p>
-                    </a>
+                <!-- Summary Cards - Users -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div class="bg-white dark:bg-dark-bg-secondary rounded-apple-lg p-6 shadow-apple border border-apple-gray-200 dark:border-dark-border">
+                        <div class="text-sm text-apple-gray-600 dark:text-dark-text-secondary mb-2 font-medium">Всего пользователей</div>
+                        <div class="text-3xl font-semibold text-apple-gray-900 dark:text-dark-text" id="totalUsers">—</div>
+                    </div>
+                    <div class="bg-white dark:bg-dark-bg-secondary rounded-apple-lg p-6 shadow-apple border border-apple-gray-200 dark:border-dark-border">
+                        <div class="text-sm text-apple-gray-600 dark:text-dark-text-secondary mb-2 font-medium">Активных пользователей</div>
+                        <div class="text-3xl font-semibold text-green-600" id="activeUsers">—</div>
+                    </div>
+                    <div class="bg-white dark:bg-dark-bg-secondary rounded-apple-lg p-6 shadow-apple border border-apple-gray-200 dark:border-dark-border">
+                        <div class="text-sm text-apple-gray-600 dark:text-dark-text-secondary mb-2 font-medium">Платных пользователей</div>
+                        <div class="text-3xl font-semibold text-blue-600" id="proUsers">—</div>
+                    </div>
+                </div>
+
+                <!-- NPS Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div class="bg-white dark:bg-dark-bg-secondary rounded-apple-lg p-6 shadow-apple border border-apple-gray-200 dark:border-dark-border">
+                        <div class="text-sm text-apple-gray-600 dark:text-dark-text-secondary mb-2 font-medium">NPS всех (21 день)</div>
+                        <div class="text-3xl font-semibold text-apple-gray-900 dark:text-dark-text" id="npsScoreAll">—</div>
+                    </div>
+                    <div class="bg-white dark:bg-dark-bg-secondary rounded-apple-lg p-6 shadow-apple border border-apple-gray-200 dark:border-dark-border">
+                        <div class="text-sm text-apple-gray-600 dark:text-dark-text-secondary mb-2 font-medium">NPS платящих (21 день)</div>
+                        <div class="text-3xl font-semibold text-apple-gray-900 dark:text-dark-text" id="npsScorePaying">—</div>
+                    </div>
+                </div>
+
+                <!-- Rolling Metrics Cards - DAU/WAU/MAU -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <!-- DAU Card -->
+                    <div class="bg-white dark:bg-dark-bg-secondary rounded-apple-lg p-6 shadow-apple border border-apple-gray-200 dark:border-dark-border">
+                        <div class="text-sm text-apple-gray-600 dark:text-dark-text-secondary mb-2 font-medium">DAU (24 часа)</div>
+                        <div class="flex items-end justify-between">
+                            <div class="text-3xl font-semibold text-apple-gray-900 dark:text-dark-text" id="dauMetric">—</div>
+                            <div class="text-sm font-medium" id="dauChange">—</div>
+                        </div>
+                    </div>
+
+                    <!-- WAU Card -->
+                    <div class="bg-white dark:bg-dark-bg-secondary rounded-apple-lg p-6 shadow-apple border border-apple-gray-200 dark:border-dark-border">
+                        <div class="text-sm text-apple-gray-600 dark:text-dark-text-secondary mb-2 font-medium">WAU (7 дней)</div>
+                        <div class="flex items-end justify-between">
+                            <div class="text-3xl font-semibold text-apple-gray-900 dark:text-dark-text" id="wauMetric">—</div>
+                            <div class="text-sm font-medium" id="wauChange">—</div>
+                        </div>
+                    </div>
+
+                    <!-- MAU Card -->
+                    <div class="bg-white dark:bg-dark-bg-secondary rounded-apple-lg p-6 shadow-apple border border-apple-gray-200 dark:border-dark-border">
+                        <div class="text-sm text-apple-gray-600 dark:text-dark-text-secondary mb-2 font-medium">MAU (30 дней)</div>
+                        <div class="flex items-end justify-between">
+                            <div class="text-3xl font-semibold text-apple-gray-900 dark:text-dark-text" id="mauMetric">—</div>
+                            <div class="text-sm font-medium" id="mauChange">—</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Revenue Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <!-- Day Card -->
+                    <div class="bg-white dark:bg-dark-bg-secondary rounded-apple-lg p-6 shadow-apple border border-apple-gray-200 dark:border-dark-border">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="text-sm text-apple-gray-600 dark:text-dark-text-secondary font-medium">Оплаты за день</div>
+                            <input
+                                type="date"
+                                id="revenueDayDatePicker"
+                                onchange="changeDayDate(this.value)"
+                                class="text-xs bg-white dark:bg-dark-bg-tertiary border border-apple-gray-300 dark:border-dark-border rounded px-2 py-1 text-apple-gray-700 dark:text-dark-text-secondary focus:ring-1 focus:ring-apple-blue focus:border-apple-blue outline-none"
+                            >
+                        </div>
+                        <div class="text-xs text-apple-gray-600 dark:text-dark-text-secondary mb-2" id="revenueDayPeriod">—</div>
+                        <div class="text-3xl font-semibold text-apple-gray-900 dark:text-dark-text" id="revenueDay">—</div>
+                        <div class="text-xs text-apple-gray-500 dark:text-dark-text-secondary mt-2" id="revenueDayCount">—</div>
+                    </div>
+
+                    <!-- Week Card -->
+                    <div class="bg-white dark:bg-dark-bg-secondary rounded-apple-lg p-6 shadow-apple border border-apple-gray-200 dark:border-dark-border">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="text-sm text-apple-gray-600 dark:text-dark-text-secondary font-medium">Оплаты за неделю</div>
+                            <select
+                                id="revenueWeekSelector"
+                                onchange="changeWeekPeriod(this.value)"
+                                class="text-xs bg-white dark:bg-dark-bg-tertiary border border-apple-gray-300 dark:border-dark-border rounded px-2 py-1 text-apple-gray-700 dark:text-dark-text-secondary focus:ring-1 focus:ring-apple-blue focus:border-apple-blue outline-none"
+                            >
+                                <!-- Options will be populated by JS -->
+                            </select>
+                        </div>
+                        <div class="text-xs text-apple-gray-600 dark:text-dark-text-secondary mb-2" id="revenueWeekPeriod">—</div>
+                        <div class="text-3xl font-semibold text-apple-gray-900 dark:text-dark-text" id="revenueWeek">—</div>
+                        <div class="text-xs text-apple-gray-500 dark:text-dark-text-secondary mt-2" id="revenueWeekCount">—</div>
+                    </div>
+
+                    <!-- Month Card -->
+                    <div class="bg-white dark:bg-dark-bg-secondary rounded-apple-lg p-6 shadow-apple border border-apple-gray-200 dark:border-dark-border">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="text-sm text-apple-gray-600 dark:text-dark-text-secondary font-medium">Оплаты за месяц</div>
+                            <select onchange="changeCardPeriod('month', this.value)" class="text-xs bg-white dark:bg-dark-bg-tertiary border border-apple-gray-300 dark:border-dark-border rounded px-2 py-1 text-apple-gray-700 dark:text-dark-text-secondary focus:ring-1 focus:ring-apple-blue focus:border-apple-blue outline-none">
+                                <option value="current">Текущий</option>
+                                <option value="previous">Прошлый</option>
+                            </select>
+                        </div>
+                        <div class="text-xs text-apple-gray-600 dark:text-dark-text-secondary mb-2" id="revenueMonthPeriod">—</div>
+                        <div class="text-3xl font-semibold text-apple-gray-900 dark:text-dark-text" id="revenueMonth">—</div>
+                        <div class="text-xs text-apple-gray-500 dark:text-dark-text-secondary mt-2" id="revenueMonthCount">—</div>
+                    </div>
+                </div>
+
+                <!-- Messages Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <!-- Day Messages Card -->
+                    <div class="bg-white dark:bg-dark-bg-secondary rounded-apple-lg p-6 shadow-apple border border-apple-gray-200 dark:border-dark-border">
+                        <div class="text-sm text-apple-gray-600 dark:text-dark-text-secondary mb-2 font-medium">Сообщений за 24 часа</div>
+                        <div class="flex items-end justify-between">
+                            <div class="text-3xl font-semibold text-purple-600" id="messagesDay">—</div>
+                            <div class="text-sm font-medium" id="messagesDayChange">—</div>
+                        </div>
+                    </div>
+
+                    <!-- Week Messages Card -->
+                    <div class="bg-white dark:bg-dark-bg-secondary rounded-apple-lg p-6 shadow-apple border border-apple-gray-200 dark:border-dark-border">
+                        <div class="text-sm text-apple-gray-600 dark:text-dark-text-secondary mb-2 font-medium">Сообщений за 7 дней</div>
+                        <div class="flex items-end justify-between">
+                            <div class="text-3xl font-semibold text-purple-600" id="messagesWeek">—</div>
+                            <div class="text-sm font-medium" id="messagesWeekChange">—</div>
+                        </div>
+                    </div>
+
+                    <!-- Month Messages Card -->
+                    <div class="bg-white dark:bg-dark-bg-secondary rounded-apple-lg p-6 shadow-apple border border-apple-gray-200 dark:border-dark-border">
+                        <div class="text-sm text-apple-gray-600 dark:text-dark-text-secondary mb-2 font-medium">Сообщений за 30 дней</div>
+                        <div class="flex items-end justify-between">
+                            <div class="text-3xl font-semibold text-purple-600" id="messagesMonth">—</div>
+                            <div class="text-sm font-medium" id="messagesMonthChange">—</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Grid - Vertical Layout -->
+                <div class="grid grid-cols-1 gap-6 mb-6">
+                    <!-- Active Paid Users Chart - НОВЫЙ ПЕРВЫЙ ГРАФИК -->
+                    <div class="bg-white dark:bg-dark-bg-secondary rounded-apple-lg p-6 shadow-apple border border-apple-gray-200 dark:border-dark-border">
+                        <div id="activePaidUsersChart"></div>
+                    </div>
+
+                    <!-- Daily Revenue Chart -->
+                    <div class="bg-white dark:bg-dark-bg-secondary rounded-apple-lg p-6 shadow-apple border border-apple-gray-200 dark:border-dark-border">
+                        <div id="dailyRevenueChart"></div>
+                    </div>
+
+                    <!-- Messages Chart -->
+                    <div class="bg-white dark:bg-dark-bg-secondary rounded-apple-lg p-6 shadow-apple border border-apple-gray-200 dark:border-dark-border">
+                        <div id="messagesChart"></div>
+                    </div>
+
+                    <!-- Growth Chart -->
+                    <div class="bg-white dark:bg-dark-bg-secondary rounded-apple-lg p-6 shadow-apple border border-apple-gray-200 dark:border-dark-border">
+                        <div id="growthChart"></div>
+                    </div>
+
+                    <!-- Payment Distribution Chart -->
+                    <div class="bg-white dark:bg-dark-bg-secondary rounded-apple-lg p-6 shadow-apple border border-apple-gray-200 dark:border-dark-border">
+                        <div id="paymentDistributionChart"></div>
+                    </div>
+
+                    <!-- DAU Chart -->
+                    <div class="bg-white dark:bg-dark-bg-secondary rounded-apple-lg p-6 shadow-apple border border-apple-gray-200 dark:border-dark-border">
+                        <div id="dauChart"></div>
+                    </div>
+
+                    <!-- WAU Chart -->
+                    <div class="bg-white dark:bg-dark-bg-secondary rounded-apple-lg p-6 shadow-apple border border-apple-gray-200 dark:border-dark-border">
+                        <div id="wauChart"></div>
+                    </div>
+
+                    <!-- MAU Chart -->
+                    <div class="bg-white dark:bg-dark-bg-secondary rounded-apple-lg p-6 shadow-apple border border-apple-gray-200 dark:border-dark-border">
+                        <div id="mauChart"></div>
+                    </div>
+                </div>
+
+                <!-- Sources Table -->
+                <div class="bg-white dark:bg-dark-bg-secondary rounded-apple-lg p-6 shadow-apple border border-apple-gray-200 dark:border-dark-border">
+                    <h3 class="text-lg font-semibold text-apple-gray-900 dark:text-dark-text mb-4">Источники трафика</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="border-b-2 border-apple-gray-200 dark:border-dark-border">
+                                    <th class="px-4 py-3 text-left text-sm font-semibold text-apple-gray-700 dark:text-dark-text-secondary">Источник</th>
+                                    <th class="px-4 py-3 text-left text-sm font-semibold text-apple-gray-700 dark:text-dark-text-secondary">Всего пользователей</th>
+                                    <th class="px-4 py-3 text-left text-sm font-semibold text-apple-gray-700 dark:text-dark-text-secondary">PRO пользователей</th>
+                                    <th class="px-4 py-3 text-left text-sm font-semibold text-apple-gray-700 dark:text-dark-text-secondary">Конверсия</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sourcesTableBody">
+                                <!-- Rendered by JS -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- ApexCharts -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.45.1/dist/apexcharts.min.js"></script>
+    <script src="theme.js"></script>
+    <script src="bot-manager.js"></script>
     <script src="auth.js"></script>
+    <script src="dashboard.js"></script>
+    <script src="bot-dropdown.js"></script>
     <script>
-        // Require authentication
-        auth.requireAuth();
+        function toggleMobileMenu() {
+            const overlay = document.getElementById('mobileMenuOverlay');
+            const panel = document.getElementById('mobileMenuPanel');
+
+            if (panel.classList.contains('translate-x-full')) {
+                // Open menu
+                overlay.classList.remove('hidden');
+                panel.classList.remove('translate-x-full');
+                document.body.style.overflow = 'hidden';
+            } else {
+                // Close menu
+                overlay.classList.add('hidden');
+                panel.classList.add('translate-x-full');
+                document.body.style.overflow = '';
+            }
+        }
 
         function logout() {
             if (confirm('Вы уверены, что хотите выйти?')) {
                 auth.logout();
-                window.location.href = '/';
+                const apiBase = window.location.pathname.startsWith('/support') ? '/support' : '';
+                window.location.href = `${apiBase}/`;
             }
         }
     </script>

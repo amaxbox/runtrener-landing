@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Support Dashboard - Login</title>
+    <title>Админка - Вход</title>
     <meta name="robots" content="noindex, nofollow">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
@@ -26,6 +27,14 @@
                             700: '#636366',
                             800: '#48484A',
                             900: '#1C1C1E',
+                        },
+                        'dark': {
+                            bg: '#000000',
+                            'bg-secondary': '#1C1C1E',
+                            'bg-tertiary': '#2C2C2E',
+                            border: '#48484A',
+                            text: '#FFFFFF',
+                            'text-secondary': '#AEAEB2'
                         }
                     },
                     boxShadow: {
@@ -51,12 +60,12 @@
         }
     </style>
 </head>
-<body class="bg-apple-gray-50 antialiased">
+<body class="bg-apple-gray-50 dark:bg-dark-bg antialiased">
     <div class="fixed inset-0 flex items-center justify-center p-4 overflow-y-auto">
         <div class="w-full max-w-sm">
             <div class="text-center mb-10">
-                <h1 class="text-4xl font-semibold text-apple-gray-900 mb-3 tracking-tight">Support Dashboard</h1>
-                <p class="text-base text-apple-gray-600">Введите пароль для доступа</p>
+                <h1 class="text-4xl font-semibold text-apple-gray-900 dark:text-dark-text mb-3 tracking-tight">Админка</h1>
+                <p class="text-base text-apple-gray-600 dark:text-dark-text-secondary">Введите пароль для доступа</p>
             </div>
 
             <div id="errorMessage" class="bg-red-50 border border-red-300 text-red-700 px-5 py-4 rounded-apple mb-5 hidden text-sm shadow-apple-sm">
@@ -71,7 +80,7 @@
                         required
                         autocomplete="current-password"
                         placeholder="Пароль"
-                        class="w-full px-5 py-4 bg-white border border-apple-gray-300 rounded-apple focus:ring-2 focus:ring-apple-blue focus:border-transparent outline-none transition text-base shadow-apple-sm"
+                        class="w-full px-5 py-4 bg-white dark:bg-dark-bg-secondary border border-apple-gray-300 dark:border-dark-border dark:text-dark-text rounded-apple focus:ring-2 focus:ring-apple-blue focus:border-transparent outline-none transition text-base shadow-apple-sm"
                     >
                 </div>
 
@@ -84,12 +93,13 @@
                 </button>
             </form>
 
-            <p class="text-center text-sm text-apple-gray-600 mt-6">
-                Secure login • Support Dashboard v2.0
+            <p class="text-center text-sm text-apple-gray-600 dark:text-dark-text-secondary mt-6">
+                Secure login • Админка v2.0
             </p>
         </div>
     </div>
 
+    <script src="theme.js"></script>
     <script src="auth.js"></script>
     <script>
         const loginForm = document.getElementById('loginForm');
@@ -97,9 +107,15 @@
         const submitBtn = document.getElementById('submitBtn');
         const errorMessage = document.getElementById('errorMessage');
 
-        // If already logged in, redirect to dashboard
+        // If already logged in, redirect to saved URL or dashboard
         if (auth.isAuthenticated) {
-            window.location.href = '/dashboard.html';
+            const returnUrl = sessionStorage.getItem('returnUrl');
+            if (returnUrl) {
+                sessionStorage.removeItem('returnUrl');
+                window.location.href = returnUrl;
+            } else {
+                window.location.href = `${auth.constructor.API_BASE || (window.location.pathname.startsWith('/support') ? '/support' : '')}/dashboard.html`;
+            }
         }
 
         loginForm.addEventListener('submit', async (e) => {
@@ -114,8 +130,14 @@
                 const isValid = await auth.verifyPassword(password);
 
                 if (isValid) {
-                    // Redirect to dashboard
-                    window.location.href = '/dashboard.html';
+                    // Redirect to saved URL or dashboard
+                    const returnUrl = sessionStorage.getItem('returnUrl');
+                    if (returnUrl) {
+                        sessionStorage.removeItem('returnUrl');
+                        window.location.href = returnUrl;
+                    } else {
+                        window.location.href = `${auth.constructor.API_BASE || (window.location.pathname.startsWith('/support') ? '/support' : '')}/dashboard.html`;
+                    }
                 } else {
                     errorMessage.textContent = 'Неверный пароль';
                     errorMessage.classList.remove('hidden');
@@ -124,7 +146,8 @@
                 }
             } catch (error) {
                 console.error('Login error:', error);
-                errorMessage.textContent = 'Ошибка подключения к серверу';
+                // Display the error message from the exception
+                errorMessage.textContent = error.message || 'Ошибка подключения к серверу';
                 errorMessage.classList.remove('hidden');
             } finally {
                 submitBtn.disabled = false;

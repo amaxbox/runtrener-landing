@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Пользователи - Support Dashboard</title>
+    <title>Пользователи - Админка</title>
     <meta name="robots" content="noindex, nofollow">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
@@ -26,6 +27,14 @@
                             700: '#636366',
                             800: '#48484A',
                             900: '#1C1C1E',
+                        },
+                        'dark': {
+                            bg: '#000000',
+                            'bg-secondary': '#1C1C1E',
+                            'bg-tertiary': '#2C2C2E',
+                            border: '#48484A',
+                            text: '#FFFFFF',
+                            'text-secondary': '#AEAEB2'
                         }
                     },
                     boxShadow: {
@@ -40,35 +49,142 @@
             }
         }
     </script>
+    <style>
+        /* Fix calendar icon visibility in dark mode */
+        .dark input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+    </style>
 </head>
-<body class="bg-apple-gray-50 antialiased">
+<body class="bg-apple-gray-50 dark:bg-dark-bg antialiased">
     <!-- Fixed Header -->
-    <div class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-2xl border-b border-apple-gray-200 shadow-apple-sm">
-        <div class="max-w-7xl mx-auto px-8 py-3">
+    <div class="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-dark-bg-secondary/95 backdrop-blur-2xl border-b border-apple-gray-200 dark:border-dark-border shadow-apple-sm">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 py-3">
             <div class="flex justify-between items-center">
-                <div class="flex items-center gap-6">
-                    <a href="/dashboard.html" class="text-2xl font-semibold text-apple-gray-900 tracking-tight hover:opacity-80">Support</a>
+                <div class="flex items-center gap-4 md:gap-6">
+                    <a href="dashboard.html" class="text-xl md:text-2xl font-semibold text-apple-gray-900 dark:text-dark-text tracking-tight hover:opacity-80">Админка</a>
 
-                    <!-- Main Navigation -->
-                    <div class="flex gap-4">
+                    <!-- Desktop Navigation -->
+                    <div class="hidden md:flex gap-4">
                         <a
-                            href="/users.html"
-                            class="px-4 py-2 text-sm font-medium text-apple-blue border-b-2 border-apple-blue transition"
+                            href="dashboard.html"
+                            class="px-4 py-2 text-sm font-medium text-apple-gray-600 dark:text-dark-text-secondary border-b-2 border-transparent hover:text-apple-gray-900 dark:hover:text-white transition"
+                        >
+                            Дашборд
+                        </a>
+                        <a
+                            href="users.html"
+                            class="px-4 py-2 text-sm font-medium text-apple-blue dark:text-blue-400 border-b-2 border-apple-blue dark:border-blue-400 transition"
                         >
                             Пользователи
                         </a>
                         <a
-                            href="/payments.html"
-                            class="px-4 py-2 text-sm font-medium text-apple-gray-600 border-b-2 border-transparent hover:text-apple-gray-900 transition"
+                            href="payments.html"
+                            class="px-4 py-2 text-sm font-medium text-apple-gray-600 dark:text-dark-text-secondary border-b-2 border-transparent hover:text-apple-gray-900 dark:hover:text-white transition"
                         >
                             Реестр оплат
                         </a>
                     </div>
                 </div>
 
+                <div class="flex items-center gap-2">
+                    <!-- Bot Switcher Dropdown -->
+                    <div class="relative hidden md:block">
+                        <button
+                            id="botSwitcher"
+                            class="flex items-center gap-2 px-3 py-2 rounded-apple hover:bg-apple-gray-100 dark:hover:bg-dark-bg-tertiary transition"
+                            title="Переключить бота"
+                        >
+                            <span id="currentBotColor" class="w-3 h-3 rounded-full bg-apple-blue"></span>
+                            <span id="currentBotName" class="text-sm font-medium text-apple-gray-900 dark:text-dark-text">Алекс</span>
+                            <svg class="w-4 h-4 text-apple-gray-600 dark:text-dark-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div
+                            id="botDropdown"
+                            class="hidden absolute right-0 mt-2 w-56 bg-white dark:bg-dark-bg-secondary rounded-apple shadow-apple border border-apple-gray-200 dark:border-dark-border overflow-hidden z-[100]"
+                            style="max-height: 300px; overflow-y: auto;"
+                        >
+                            <!-- Dropdown items will be populated by bot-dropdown.js -->
+                        </div>
+                    </div>
+
+                    <!-- Theme Toggle Button -->
+                    <button
+                        id="themeToggle"
+                        onclick="themeManager.toggle()"
+                        class="p-2.5 rounded-apple hover:bg-apple-gray-100 dark:hover:bg-dark-bg-tertiary transition"
+                        title="Toggle theme"
+                    >
+                        <!-- Sun Icon (shown in dark mode) -->
+                        <svg class="w-5 h-5 hidden dark:block text-dark-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                        <!-- Moon Icon (shown in light mode) -->
+                        <svg class="w-5 h-5 block dark:hidden text-apple-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                        </svg>
+                    </button>
+
+                    <!-- Mobile Menu Button -->
+                    <button
+                        id="mobileMenuBtn"
+                        onclick="toggleMobileMenu()"
+                        class="md:hidden p-2 text-apple-gray-600 dark:text-dark-text-secondary hover:text-apple-gray-900 dark:hover:text-dark-text"
+                    >
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+
+                    <!-- Desktop Logout Button -->
+                    <button
+                        onclick="logout()"
+                        class="hidden md:block px-5 py-2.5 text-sm font-medium text-apple-blue hover:opacity-80 transition rounded-apple"
+                    >
+                        Выйти
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobileMenuOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden" onclick="toggleMobileMenu()"></div>
+
+    <!-- Mobile Menu Panel -->
+    <div id="mobileMenuPanel" class="fixed top-0 right-0 bottom-0 w-64 bg-white dark:bg-dark-bg-secondary z-50 transform translate-x-full transition-transform duration-300 md:hidden shadow-2xl">
+        <div class="flex flex-col h-full">
+            <!-- Mobile Menu Header -->
+            <div class="flex items-center justify-between p-4 border-b border-apple-gray-200 dark:border-dark-border">
+                <span class="text-lg font-semibold text-apple-gray-900 dark:text-dark-text">Меню</span>
+                <button onclick="toggleMobileMenu()" class="p-2 text-apple-gray-600 dark:text-dark-text-secondary hover:text-apple-gray-900 dark:hover:text-dark-text">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Mobile Menu Items -->
+            <div class="flex-1 py-4">
+                <a href="dashboard.html" class="block px-6 py-3 text-base font-medium text-apple-gray-700 dark:text-dark-text-secondary hover:bg-apple-gray-50 dark:hover:bg-dark-bg-tertiary transition">
+                    Дашборд
+                </a>
+                <a href="users.html" class="block px-6 py-3 text-base font-medium text-apple-blue bg-apple-gray-50 dark:bg-dark-bg-tertiary transition">
+                    Пользователи
+                </a>
+                <a href="payments.html" class="block px-6 py-3 text-base font-medium text-apple-gray-700 dark:text-dark-text-secondary hover:bg-apple-gray-50 dark:hover:bg-dark-bg-tertiary transition">
+                    Реестр оплат
+                </a>
+            </div>
+
+            <!-- Mobile Logout Button -->
+            <div class="p-4 border-t border-apple-gray-200 dark:border-dark-border">
                 <button
                     onclick="logout()"
-                    class="px-5 py-2.5 text-sm font-medium text-apple-blue hover:opacity-80 transition rounded-apple"
+                    class="w-full px-5 py-3 text-base font-medium text-white bg-apple-blue hover:opacity-90 transition rounded-apple"
                 >
                     Выйти
                 </button>
@@ -77,205 +193,412 @@
     </div>
 
     <!-- Main Content with Side Panel Layout -->
-    <div class="pt-20 flex">
-        <!-- Left: Main Users List (Desktop: fixed width, Mobile: full width when no panel) -->
-        <div class="flex-1 md:flex-0 md:w-[450px] border-r border-apple-gray-200" id="usersListSection">
-            <div class="px-8 py-10 max-w-full">
+    <div class="pt-20">
+        <!-- Main Users List (centered with max-width) -->
+        <div class="max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-10">
                 <!-- Header -->
                 <div class="mb-10">
-                    <h2 class="text-3xl font-semibold text-apple-gray-900 tracking-tight">Пользователи</h2>
+                    <h2 class="text-3xl font-semibold text-apple-gray-900 dark:text-dark-text tracking-tight">Пользователи</h2>
                 </div>
 
                 <!-- Filters -->
-                <div class="bg-white rounded-apple-lg p-6 mb-6 shadow-apple">
-                    <!-- Search -->
-                    <div class="mb-4">
-                        <input
-                            type="text"
-                            id="searchInput"
-                            placeholder="Поиск по ID, имени, фамилии или username..."
-                            class="w-full px-4 py-2.5 bg-apple-gray-50 border border-apple-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-sm"
-                        >
-                    </div>
-
-                    <!-- Date Range, Subscription, Status -->
-                    <div class="grid grid-cols-1 gap-3 mb-4">
-                        <input
-                            type="date"
-                            id="dateFrom"
-                            placeholder="От"
-                            class="w-full px-3 py-1.5 bg-apple-gray-50 border border-apple-gray-200 rounded-lg text-sm"
-                        >
-                        <input
-                            type="date"
-                            id="dateTo"
-                            placeholder="До"
-                            class="w-full px-3 py-1.5 bg-apple-gray-50 border border-apple-gray-200 rounded-lg text-sm"
-                        >
+                <div class="bg-white dark:bg-dark-bg-secondary rounded-apple-lg p-5 mb-6 shadow-apple">
+                    <!-- Row 1: Search, Subscription, Status -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+                        <!-- Search -->
+                        <div>
+                            <label for="searchInput" class="block text-xs font-medium text-apple-gray-700 dark:text-dark-text-secondary mb-2">Поиск</label>
+                            <input
+                                type="text"
+                                id="searchInput"
+                                placeholder="ID, имя, фамилия или username..."
+                                class="w-full px-4 py-2.5 bg-apple-gray-50 dark:bg-dark-bg-tertiary border border-apple-gray-200 dark:border-dark-border dark:text-dark-text rounded-apple focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-sm"
+                            >
+                        </div>
 
                         <!-- Subscription -->
-                        <div class="flex gap-1.5">
-                            <button id="subTabAll" onclick="setSubscriptionFilter('')" class="flex-1 px-2 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-medium">Все</button>
-                            <button id="subTabFree" onclick="setSubscriptionFilter('free')" class="flex-1 px-2 py-1.5 bg-apple-gray-100 text-apple-gray-700 rounded-lg text-xs font-medium hover:bg-apple-gray-200">Free</button>
-                            <button id="subTabPro" onclick="setSubscriptionFilter('pro')" class="flex-1 px-2 py-1.5 bg-apple-gray-100 text-apple-gray-700 rounded-lg text-xs font-medium hover:bg-apple-gray-200">Pro</button>
+                        <div>
+                            <label class="block text-xs font-medium text-apple-gray-700 dark:text-dark-text-secondary mb-2">Подписка</label>
+                            <div class="flex gap-2">
+                                <button id="subTabAll" onclick="setSubscriptionFilter('')" class="flex-1 px-3 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-apple hover:bg-blue-700 transition">Все</button>
+                                <button id="subTabFree" onclick="setSubscriptionFilter('free')" class="flex-1 px-3 py-2.5 bg-apple-gray-100 dark:bg-dark-bg-tertiary text-apple-gray-700 dark:text-dark-text-secondary text-sm font-medium rounded-apple hover:bg-apple-gray-200 transition">Free</button>
+                                <button id="subTabPro" onclick="setSubscriptionFilter('pro')" class="flex-1 px-3 py-2.5 bg-apple-gray-100 dark:bg-dark-bg-tertiary text-apple-gray-700 dark:text-dark-text-secondary text-sm font-medium rounded-apple hover:bg-apple-gray-200 transition">Pro</button>
+                            </div>
                         </div>
 
                         <!-- Status -->
-                        <select id="statusFilter" class="w-full px-3 py-1.5 bg-apple-gray-50 border border-apple-gray-200 rounded-lg text-sm">
-                            <option value="">Все статусы</option>
-                            <option value="active">Active</option>
-                            <option value="stop">Stop</option>
-                            <option value="ban">Ban</option>
-                            <option value="mute">Mute</option>
-                        </select>
+                        <div>
+                            <label for="statusFilter" class="block text-xs font-medium text-apple-gray-700 dark:text-dark-text-secondary mb-2">Статус</label>
+                            <select id="statusFilter" class="w-full px-4 py-2.5 bg-apple-gray-50 dark:bg-dark-bg-tertiary border border-apple-gray-200 dark:border-dark-border dark:text-dark-text rounded-apple text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+                                <option value="">Все статусы</option>
+                                <option value="active">Active</option>
+                                <option value="stop">Stop</option>
+                                <option value="ban">Ban</option>
+                                <option value="mute">Mute</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Row 2: Date Registration (quick buttons + date range) -->
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-3 mb-4">
+                        <!-- Quick Date Buttons (3 columns) -->
+                        <div class="md:col-span-3">
+                            <label class="block text-xs font-medium text-apple-gray-700 dark:text-dark-text-secondary mb-2">Дата регистрации</label>
+                            <div class="flex gap-2">
+                                <button id="dateToday" onclick="setQuickDateFilter('today')" class="flex-1 px-4 py-2.5 bg-apple-gray-100 dark:bg-dark-bg-tertiary text-apple-gray-700 dark:text-dark-text-secondary text-sm font-medium rounded-apple hover:bg-apple-gray-200 transition">Сегодня</button>
+                                <button id="dateYesterday" onclick="setQuickDateFilter('yesterday')" class="flex-1 px-4 py-2.5 bg-apple-gray-100 dark:bg-dark-bg-tertiary text-apple-gray-700 dark:text-dark-text-secondary text-sm font-medium rounded-apple hover:bg-apple-gray-200 transition">Вчера</button>
+                                <button id="dateThisWeek" onclick="setQuickDateFilter('thisWeek')" class="flex-1 px-4 py-2.5 bg-apple-gray-100 dark:bg-dark-bg-tertiary text-apple-gray-700 dark:text-dark-text-secondary text-sm font-medium rounded-apple hover:bg-apple-gray-200 transition">Текущая неделя</button>
+                            </div>
+                        </div>
+
+                        <!-- Date From (1 column) -->
+                        <div>
+                            <label for="dateFrom" class="block text-xs font-medium text-apple-gray-700 dark:text-dark-text-secondary mb-2">От</label>
+                            <input
+                                type="date"
+                                id="dateFrom"
+                                class="w-full px-3 py-2.5 bg-apple-gray-50 dark:bg-dark-bg-tertiary border border-apple-gray-200 dark:border-dark-border dark:text-dark-text rounded-apple text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                            >
+                        </div>
+
+                        <!-- Date To (1 column) -->
+                        <div>
+                            <label for="dateTo" class="block text-xs font-medium text-apple-gray-700 dark:text-dark-text-secondary mb-2">До</label>
+                            <input
+                                type="date"
+                                id="dateTo"
+                                class="w-full px-3 py-2.5 bg-apple-gray-50 dark:bg-dark-bg-tertiary border border-apple-gray-200 dark:border-dark-border dark:text-dark-text rounded-apple text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Row 3: PRO End Date (quick buttons + date range) -->
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-3 mb-4">
+                        <!-- Quick Date Buttons (3 columns) -->
+                        <div class="md:col-span-3">
+                            <label class="block text-xs font-medium text-apple-gray-700 dark:text-dark-text-secondary mb-2">Дата окончания PRO</label>
+                            <div class="flex gap-2">
+                                <button id="proDateYesterday" onclick="setProDateFilter('yesterday')" class="flex-1 px-4 py-2.5 bg-apple-gray-100 dark:bg-dark-bg-tertiary text-apple-gray-700 dark:text-dark-text-secondary text-sm font-medium rounded-apple hover:bg-apple-gray-200 transition">Вчера</button>
+                                <button id="proDateToday" onclick="setProDateFilter('today')" class="flex-1 px-4 py-2.5 bg-apple-gray-100 dark:bg-dark-bg-tertiary text-apple-gray-700 dark:text-dark-text-secondary text-sm font-medium rounded-apple hover:bg-apple-gray-200 transition">Сегодня</button>
+                                <button id="proDateTomorrow" onclick="setProDateFilter('tomorrow')" class="flex-1 px-4 py-2.5 bg-apple-gray-100 dark:bg-dark-bg-tertiary text-apple-gray-700 dark:text-dark-text-secondary text-sm font-medium rounded-apple hover:bg-apple-gray-200 transition">Завтра</button>
+                            </div>
+                        </div>
+
+                        <!-- Date From (1 column) -->
+                        <div>
+                            <label for="proDateFrom" class="block text-xs font-medium text-apple-gray-700 dark:text-dark-text-secondary mb-2">От</label>
+                            <input
+                                type="date"
+                                id="proDateFrom"
+                                class="w-full px-3 py-2.5 bg-apple-gray-50 dark:bg-dark-bg-tertiary border border-apple-gray-200 dark:border-dark-border dark:text-dark-text rounded-apple text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                            >
+                        </div>
+
+                        <!-- Date To (1 column) -->
+                        <div>
+                            <label for="proDateTo" class="block text-xs font-medium text-apple-gray-700 dark:text-dark-text-secondary mb-2">До</label>
+                            <input
+                                type="date"
+                                id="proDateTo"
+                                class="w-full px-3 py-2.5 bg-apple-gray-50 dark:bg-dark-bg-tertiary border border-apple-gray-200 dark:border-dark-border dark:text-dark-text rounded-apple text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                            >
+                        </div>
                     </div>
 
                     <!-- Buttons -->
                     <div class="flex gap-3">
-                        <button id="applyFilters" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium text-sm">Применить</button>
-                        <button id="resetFilters" class="px-5 py-2 bg-apple-gray-100 text-apple-gray-700 rounded-lg hover:bg-apple-gray-200 font-medium text-sm">Сбросить</button>
+                        <button id="applyFilters" class="px-6 py-2.5 bg-blue-600 text-white rounded-apple hover:bg-blue-700 font-medium text-sm transition">Применить</button>
+                        <button id="resetFilters" class="px-5 py-2.5 bg-apple-gray-100 dark:bg-dark-bg-tertiary text-apple-gray-700 dark:text-dark-text-secondary rounded-apple hover:bg-apple-gray-200 font-medium text-sm transition">Сбросить</button>
                     </div>
                 </div>
 
-                <!-- Users Count -->
-                <p id="usersCount" class="text-sm text-apple-gray-600 mb-4">Найдено: 0 пользователей</p>
+                <!-- Users Count + Sort Buttons -->
+                <!-- Mobile: 2 rows (count + buttons), Desktop: 1 row -->
+                <div class="mb-4">
+                    <!-- Row 1: Count -->
+                    <div class="mb-3 md:mb-0 md:flex md:items-center md:justify-between">
+                        <h3 id="usersCount" class="text-base md:text-lg font-semibold text-apple-gray-900 dark:text-dark-text mb-3 md:mb-0">Найдено: 0 пользователей</h3>
+
+                        <!-- Row 2 on Mobile, same row on Desktop: Sort Buttons -->
+                        <div class="flex gap-2">
+                            <button id="sortByCreated" onclick="setSortBy('created_at')" class="flex-1 md:flex-none px-3 md:px-4 py-2 text-xs md:text-sm text-apple-gray-600 dark:text-dark-text-secondary hover:text-apple-gray-900 dark:hover:text-white flex items-center justify-center gap-1 border border-apple-gray-200 dark:border-dark-border rounded-apple dark:bg-dark-bg-tertiary">
+                                <span class="hidden sm:inline">По регистрации</span>
+                                <span class="sm:hidden">Регистрация</span>
+                                <span class="sort-arrow">↓↑</span>
+                            </button>
+                            <button id="sortByActivity" onclick="setSortBy('updated_at')" class="flex-1 md:flex-none px-3 md:px-4 py-2 text-xs md:text-sm bg-blue-600 text-white rounded-apple flex items-center justify-center gap-1">
+                                <span class="hidden sm:inline">По активности</span>
+                                <span class="sm:hidden">Активность</span>
+                                <span class="sort-arrow">↓</span>
+                            </button>
+                            <button id="sortByMessages" onclick="setSortBy('daily_message_count')" class="flex-1 md:flex-none px-3 md:px-4 py-2 text-xs md:text-sm text-apple-gray-600 dark:text-dark-text-secondary hover:text-apple-gray-900 dark:hover:text-white flex items-center justify-center gap-1 border border-apple-gray-200 dark:border-dark-border rounded-apple dark:bg-dark-bg-tertiary">
+                                <span class="hidden sm:inline">По сообщениям</span>
+                                <span class="sm:hidden">Сообщения</span>
+                                <span class="sort-arrow">↓↑</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Users Table -->
-                <div class="bg-white border border-apple-gray-200 rounded-apple-lg overflow-hidden mb-6 shadow-apple" id="usersTableContainer">
-                    <div class="p-10 text-center text-apple-gray-600">Загрузка...</div>
+                <div class="bg-white dark:bg-dark-bg-secondary border border-apple-gray-200 dark:border-dark-border rounded-apple-lg overflow-hidden mb-6 shadow-apple" id="usersTableContainer">
+                    <div class="p-10 text-center text-apple-gray-600 dark:text-dark-text-secondary">Загрузка...</div>
                 </div>
 
                 <!-- Pagination -->
                 <div class="flex justify-center gap-2" id="pagination"></div>
             </div>
-        </div>
 
-        <!-- Right: User Detail Side Panel (Desktop: 640px max, but not more than 50% screen, Mobile: fullscreen) -->
-        <div class="hidden md:block md:w-[640px] md:overflow-y-auto md:max-h-[calc(100vh-80px)] md:border-l md:border-apple-gray-200 md:max-w-[50vw]" id="userDetailPanel">
-            <!-- User Detail Content -->
-            <div class="px-6 py-10">
-                <!-- Close Button & User Header -->
-                <div class="flex items-center justify-between mb-8 sticky top-0 bg-white/95 -mx-6 px-6 pt-3 pb-3 border-b border-apple-gray-200">
-                    <div class="flex items-center gap-2">
-                        <button
-                            onclick="shareUserLink()"
-                            class="p-2 text-apple-blue hover:opacity-80 transition rounded-apple"
-                            id="shareUserLinkBtn"
-                            title="Скопировать ссылку"
-                        >
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.658 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
-                            </svg>
-                        </button>
+        <!-- Dark Overlay (shown when panel is open) -->
+        <div class="hidden fixed inset-0 bg-black/30 z-30 backdrop-blur-sm md:backdrop-blur-0" id="panelOverlay" onclick="closeUserDetail()"></div>
+
+        <!-- Right: User Detail Side Panel (hidden by default, opens on user click) -->
+        <!-- Mobile: Full screen, Desktop: Side panel -->
+        <div class="hidden fixed inset-0 md:inset-auto md:w-[720px] md:border-l md:border-apple-gray-200 dark:md:border-gray-700 md:max-w-[50vw] bg-white dark:bg-dark-bg-secondary md:right-0 md:top-[64px] md:h-[calc(100vh-64px)] z-50 shadow-2xl flex flex-col" id="userDetailPanel">
+            <!-- Fixed Header -->
+            <div class="flex-shrink-0 bg-white dark:bg-dark-bg-secondary border-b border-apple-gray-200 dark:border-dark-border">
+                <!-- User Header with Close Button -->
+                <div class="flex items-start justify-between px-6 py-4">
+                    <div class="flex-1 min-w-0">
+                        <!-- Name and Share Profile Link Icon -->
+                        <div class="flex items-center gap-2 mb-2">
+                            <h3 class="text-xl font-semibold text-apple-gray-900 dark:text-dark-text tracking-tight" id="userNameHeader">Загрузка...</h3>
+                            <button onclick="copyProfileLink()" class="text-apple-gray-400 hover:text-apple-blue transition" title="Скопировать ссылку на профиль">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+                            </button>
+                        </div>
+
+                        <!-- Subscription Badge -->
+                        <div class="mb-2">
+                            <span id="userSubscriptionBadge"></span>
+                        </div>
+
+                        <!-- Telegram ID and Username in one line -->
+                        <div class="flex items-center gap-3 text-sm text-apple-gray-600">
+                            <div class="flex items-center gap-1.5">
+                                <span id="userTelegramId">—</span>
+                                <button onclick="copyTelegramId()" class="text-apple-gray-400 hover:text-apple-gray-600 transition" title="Копировать Telegram ID">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                </button>
+                            </div>
+                            <div class="flex items-center gap-1.5" id="userUsernameBlock">
+                                <span id="userUsernameText">—</span>
+                                <button onclick="copyUsername()" class="text-apple-gray-400 hover:text-apple-gray-600 transition" title="Копировать username">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                     <button
                         onclick="closeUserDetail()"
-                        class="p-2 text-apple-gray-600 hover:text-apple-gray-900 hover:opacity-80 transition rounded-apple"
+                        class="p-2 text-apple-gray-600 hover:text-apple-gray-900 hover:opacity-80 transition rounded-apple ml-4 flex-shrink-0"
                         title="Закрыть"
                     >
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
                     </button>
                 </div>
 
-                <!-- User Info Header -->
-                <div class="mb-8">
-                    <h3 class="text-2xl font-semibold text-apple-gray-900 tracking-tight" id="userNameHeader">Загрузка...</h3>
-                    <p class="text-sm text-apple-gray-600 mt-2" id="userIdHeader">—</p>
+                <!-- Admin Actions -->
+                <div class="px-6 py-3 border-t border-apple-gray-100 dark:border-dark-border">
+                    <div class="flex items-center gap-2">
+                        <button
+                            id="toggleBanBtn"
+                            onclick="toggleUserBan()"
+                            class="px-3 py-1.5 text-xs font-medium text-apple-gray-700 dark:text-dark-text-secondary bg-apple-gray-100 dark:bg-dark-bg-tertiary hover:bg-apple-gray-200 dark:hover:bg-dark-bg-tertiary/80 rounded-md transition disabled:opacity-50 disabled:cursor-not-allowed border border-apple-gray-200 dark:border-dark-border"
+                        >
+                            <span id="banBtnText">Забанить</span>
+                        </button>
+                        <button
+                            id="toggleProBtn"
+                            onclick="toggleUserPro()"
+                            class="px-3 py-1.5 text-xs font-medium text-apple-gray-700 dark:text-dark-text-secondary bg-apple-gray-100 dark:bg-dark-bg-tertiary hover:bg-apple-gray-200 dark:hover:bg-dark-bg-tertiary/80 rounded-md transition disabled:opacity-50 disabled:cursor-not-allowed border border-apple-gray-200 dark:border-dark-border"
+                        >
+                            <span id="proBtnText">Включить PRO</span>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Tabs Navigation -->
-                <div class="border-b border-apple-gray-200 mb-8 -mx-8 px-8">
-                    <div class="flex gap-6 overflow-x-auto">
-                        <button class="tab-button py-4 text-sm font-medium text-apple-blue border-b-2 border-apple-blue whitespace-nowrap transition" data-tab="chat">Диалог</button>
-                        <button class="tab-button py-4 text-sm font-medium text-apple-gray-600 border-b-2 border-transparent whitespace-nowrap hover:text-apple-gray-900 transition" data-tab="therapy">Профиль</button>
-                        <button class="tab-button py-4 text-sm font-medium text-apple-gray-600 border-b-2 border-transparent whitespace-nowrap hover:text-apple-gray-900 transition" data-tab="payments">Платежи</button>
-                        <button class="tab-button py-4 text-sm font-medium text-apple-gray-600 border-b-2 border-transparent whitespace-nowrap hover:text-apple-gray-900 transition" data-tab="info">Остальное</button>
+                <div class="border-b border-apple-gray-200 dark:border-dark-border px-6">
+                    <div class="flex gap-4 overflow-x-auto">
+                        <button class="tab-button py-3 text-sm font-medium text-apple-blue border-b-2 border-apple-blue whitespace-nowrap transition" data-tab="chat">Диалог</button>
+                        <button class="tab-button py-3 text-sm font-medium text-apple-gray-600 border-b-2 border-transparent whitespace-nowrap hover:text-apple-gray-900 transition" data-tab="analysis">Анализ диалога</button>
+                        <button class="tab-button py-3 text-sm font-medium text-apple-gray-600 border-b-2 border-transparent whitespace-nowrap hover:text-apple-gray-900 transition" data-tab="therapy">Профиль</button>
+                        <button class="tab-button py-3 text-sm font-medium text-apple-gray-600 border-b-2 border-transparent whitespace-nowrap hover:text-apple-gray-900 transition" data-tab="payments">Платежи</button>
+                        <button class="tab-button py-3 text-sm font-medium text-apple-gray-600 border-b-2 border-transparent whitespace-nowrap hover:text-apple-gray-900 transition" data-tab="info">Остальное</button>
                     </div>
                 </div>
 
-                <!-- Tab: Chat -->
-                <div class="tab-content active" id="tab-chat">
-                    <!-- Chat Controls -->
-                    <div class="flex justify-between items-center mb-6 flex-wrap gap-3">
-                        <div class="flex gap-3">
-                            <button
-                                id="sortNewestFirst"
-                                class="px-5 py-2.5 bg-apple-blue text-white rounded-apple text-sm font-medium hover:opacity-90 active:opacity-80 transition"
-                            >
-                                Новые сверху
-                            </button>
-                            <button
-                                id="sortOldestFirst"
-                                class="px-5 py-2.5 bg-apple-gray-100 text-apple-gray-700 rounded-apple text-sm font-medium hover:bg-apple-gray-200 transition"
-                            >
-                                Старые сверху
-                            </button>
-                        </div>
-                        <div id="chatMessagesCount" class="text-sm text-apple-gray-600">
-                            Загрузка...
+                <!-- Chat Controls (visible only on chat tab) -->
+                <div id="chatControlsHeader" class="flex items-center px-6 py-3 border-b border-apple-gray-200 dark:border-dark-border">
+                    <!-- Left: Sort button (fixed width) -->
+                    <div class="flex-shrink-0 mr-4">
+                        <button
+                            id="toggleChatSort"
+                            class="text-sm text-apple-gray-600 hover:text-apple-blue flex items-center gap-1 underline decoration-dotted underline-offset-2"
+                        >
+                            <span id="chatSortLabel">Новые сверху</span> <span id="chatSortArrow">↓</span>
+                        </button>
+                    </div>
+
+                    <!-- Center: Pagination (grows to take remaining space) -->
+                    <div class="flex-1 flex items-center justify-center">
+                        <div id="chatPagination" class="flex items-center gap-3">
+                            <!-- Pagination links will be added here -->
                         </div>
                     </div>
 
+                    <!-- Right: Messages count + Refresh button (fixed width) -->
+                    <div class="flex-shrink-0 ml-4 flex items-center gap-2">
+                        <div id="chatMessagesCount" class="text-sm text-apple-gray-600 whitespace-nowrap">
+                            Загрузка...
+                        </div>
+                        <button
+                            id="refreshChatBtn"
+                            onclick="refreshChat()"
+                            class="p-1.5 text-apple-gray-500 hover:text-apple-blue hover:bg-apple-gray-100 rounded-lg transition"
+                            title="Обновить диалог"
+                        >
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scrollable Content Area -->
+            <div class="flex-1 overflow-y-auto">
+                <!-- Tab: Chat -->
+                <div class="tab-content active px-6 py-6" id="tab-chat">
                     <!-- Chat Messages -->
                     <div id="chatLogs" class="text-apple-gray-600 text-base">Загрузка...</div>
+                </div>
 
-                    <!-- Chat Pagination -->
-                    <div id="chatPagination" class="flex justify-center gap-2 mt-8">
-                        <!-- Pagination buttons -->
+                <!-- Tab: Analysis -->
+                <div class="tab-content px-6 py-6" id="tab-analysis">
+                    <!-- System Prompt Editor -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-apple-gray-900 mb-2">
+                            Системный промпт:
+                        </label>
+                        <textarea
+                            id="systemPromptEditor"
+                            rows="10"
+                            class="w-full px-3 py-2 border border-apple-gray-300 rounded-apple text-sm font-mono text-apple-gray-900 focus:outline-none focus:ring-2 focus:ring-apple-blue focus:border-transparent resize-vertical"
+                            placeholder="Загрузка системного промпта..."
+                        ></textarea>
+                        <div class="mt-2 flex items-center gap-2">
+                            <button
+                                id="savePromptBtn"
+                                onclick="saveSystemPrompt()"
+                                class="px-3 py-1.5 bg-apple-gray-100 text-apple-gray-900 text-sm font-medium rounded-apple hover:bg-apple-gray-200 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                Сохранить промпт
+                            </button>
+                            <span id="promptSaveStatus" class="text-sm text-apple-gray-600"></span>
+                        </div>
+                    </div>
+
+                    <!-- Analyze Button -->
+                    <div class="mb-4">
+                        <button
+                            id="analyzeDialogBtn"
+                            onclick="analyzeDialog()"
+                            class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-apple hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            Анализировать диалог
+                        </button>
+                    </div>
+
+                    <!-- Analysis Result -->
+                    <div id="dialogAnalysis" class="text-apple-gray-600 text-base">
+                        Нажмите кнопку для анализа диалога
                     </div>
                 </div>
 
                 <!-- Tab: Therapy Profile -->
-                <div class="tab-content" id="tab-therapy">
-                    <div id="therapyProfile" class="text-apple-gray-600 text-base">Загрузка...</div>
+                <div class="tab-content px-6 py-6" id="tab-therapy">
+                    <!-- User Questions Section -->
+                    <div class="mb-6">
+                        <h4 class="text-sm font-semibold text-apple-gray-900 dark:text-dark-text mb-3">Вопросы пользователя</h4>
+                        <div id="userQuestions" class="text-apple-gray-600 dark:text-dark-text-secondary text-base">Загрузка...</div>
+                    </div>
+
+                    <!-- Therapy Profile Section -->
+                    <div>
+                        <h4 class="text-sm font-semibold text-apple-gray-900 dark:text-dark-text mb-3">Терапевтический профиль</h4>
+                        <div id="therapyProfile" class="text-apple-gray-600 dark:text-dark-text-secondary text-base">Загрузка...</div>
+                    </div>
                 </div>
 
                 <!-- Tab: Payments -->
-                <div class="tab-content" id="tab-payments">
+                <div class="tab-content px-6 py-6" id="tab-payments">
                     <div id="payments" class="text-apple-gray-600 text-base">Загрузка...</div>
                 </div>
 
                 <!-- Tab: Остальное (User Info) -->
-                <div class="tab-content" id="tab-info">
+                <div class="tab-content px-6 py-6" id="tab-info">
                     <div id="userInfo" class="text-apple-gray-600 text-base">Загрузка...</div>
                 </div>
             </div>
+
+            <!-- Floating Back to Top Button (positioned relative to panel) -->
+            <button
+                id="backToTopBtn"
+                onclick="scrollToTop()"
+                class="absolute bottom-6 right-6 p-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition z-50"
+                style="display: none;"
+            >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+                </svg>
+            </button>
         </div>
     </div>
 
-    <style>
-        .tab-content {
-            max-height: calc(100vh - 400px);
-            overflow-y: auto;
-        }
-
-        .tab-content::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .tab-content::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .tab-content::-webkit-scrollbar-thumb {
-            background: #ccc;
-            border-radius: 3px;
-        }
-
-        .tab-content::-webkit-scrollbar-thumb:hover {
-            background: #999;
-        }
-    </style>
-
+    <script src="theme.js"></script>
+    <script src="bot-manager.js"></script>
     <script src="auth.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.45.1/dist/apexcharts.min.js"></script>
     <script src="users.js"></script>
+    <script src="bot-dropdown.js"></script>
     <script>
+        function toggleMobileMenu() {
+            const overlay = document.getElementById('mobileMenuOverlay');
+            const panel = document.getElementById('mobileMenuPanel');
+
+            if (panel.classList.contains('translate-x-full')) {
+                // Open menu
+                overlay.classList.remove('hidden');
+                panel.classList.remove('translate-x-full');
+                document.body.style.overflow = 'hidden';
+            } else {
+                // Close menu
+                overlay.classList.add('hidden');
+                panel.classList.add('translate-x-full');
+                document.body.style.overflow = '';
+            }
+        }
+
         function logout() {
             if (confirm('Вы уверены, что хотите выйти?')) {
                 auth.logout();
-                window.location.href = '/';
+                const apiBase = window.location.pathname.startsWith('/support') ? '/support' : '';
+                window.location.href = `${apiBase}/`;
+            }
+        }
+
+        function scrollToTop() {
+            // Find the scrollable container (flex-1 overflow-y-auto div)
+            const panel = document.getElementById('userDetailPanel');
+            if (panel) {
+                const scrollContainer = panel.querySelector('.overflow-y-auto');
+                if (scrollContainer) {
+                    scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+                }
             }
         }
     </script>
